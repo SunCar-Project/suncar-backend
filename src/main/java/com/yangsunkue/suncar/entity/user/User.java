@@ -1,5 +1,6 @@
 package com.yangsunkue.suncar.entity.user;
 
+import com.yangsunkue.suncar.entity.BaseEntity;
 import com.yangsunkue.suncar.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.*;
@@ -12,7 +13,8 @@ import lombok.*;
 @NoArgsConstructor
 @ToString
 @Getter
-public class User {
+@Builder
+public class User extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
