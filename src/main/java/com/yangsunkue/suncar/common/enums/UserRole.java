@@ -1,4 +1,4 @@
-package com.yangsunkue.suncar.enums;
+package com.yangsunkue.suncar.common.enums;
 
 /**
  * 유저 권한을 정의한 enum 입니다.

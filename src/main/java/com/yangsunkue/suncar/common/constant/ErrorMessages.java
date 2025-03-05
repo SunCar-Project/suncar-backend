@@ -1,4 +1,4 @@
-package com.yangsunkue.suncar.constant;
+package com.yangsunkue.suncar.common.constant;
 
 public class ErrorMessages {
 

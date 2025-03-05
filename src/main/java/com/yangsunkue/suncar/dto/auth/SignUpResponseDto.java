@@ -1,7 +1,7 @@
 package com.yangsunkue.suncar.dto.auth;
 
 import com.yangsunkue.suncar.entity.user.User;
-import com.yangsunkue.suncar.enums.UserRole;
+import com.yangsunkue.suncar.common.enums.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;

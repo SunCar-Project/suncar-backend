@@ -1,7 +1,7 @@
 package com.yangsunkue.suncar.entity.user;
 
 import com.yangsunkue.suncar.entity.BaseEntity;
-import com.yangsunkue.suncar.enums.UserRole;
+import com.yangsunkue.suncar.common.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
