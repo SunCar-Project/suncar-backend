@@ -1,6 +1,6 @@
 package com.yangsunkue.suncar.controller.auth;
 
-import com.yangsunkue.suncar.constant.ResponseMessages;
+import com.yangsunkue.suncar.common.constant.ResponseMessages;
 import com.yangsunkue.suncar.dto.ResponseDto;
 import com.yangsunkue.suncar.dto.auth.LoginRequestDto;
 import com.yangsunkue.suncar.dto.auth.LoginResponseDto;
@@ -50,6 +50,7 @@ public class AuthController {
 
     /**
      * 일반 로그인을 진행합니다.
+     * JWT 토큰을 발급합니다.
      */
     @PostMapping("/login")
     public ResponseDto<LoginResponseDto> login(@RequestBody LoginRequestDto dto) {
