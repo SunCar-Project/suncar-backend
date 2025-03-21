@@ -12,5 +12,5 @@ public class ResponseMessages {
      * User 관련 응답 메시지
      */
     public static final String USER_PROFILE_RETRIEVED = "회원 정보를 조회하였습니다.";
-
+    public static final String USER_PROFILE_UPDATED =  "회원 정보를 수정하였습니다.";
 }
