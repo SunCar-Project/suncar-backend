@@ -7,7 +7,6 @@ import com.yangsunkue.suncar.dto.auth.SignUpRequestDto;
 import com.yangsunkue.suncar.dto.auth.SignUpResponseDto;
 import com.yangsunkue.suncar.entity.user.User;
 import com.yangsunkue.suncar.exception.DuplicateResourceException;
-import com.yangsunkue.suncar.exception.InvalidPasswordException;
 import com.yangsunkue.suncar.exception.NotFoundException;
 import com.yangsunkue.suncar.repository.user.UserRepository;
 import com.yangsunkue.suncar.security.CustomUserDetails;
@@ -15,7 +14,6 @@ import com.yangsunkue.suncar.security.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -69,12 +67,17 @@ public class AuthService {
 
         // Spring Security의 AuthenticationManager를 사용해 인증
         // 인증 실패 시 BadCredentialsException 발생 -> 전역 핸들러 처리 구현
+        // 인증 성공 시 내부적으로 loadUserByUsername()을 호출하여 Authentication 객체 안에 UserDetails를 넣는다
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(dto.getUserId(), dto.getPassword())
         );
 
         // 인증된 사용자 정보 가져오기
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+
+        // TODO
+        // userdetail에서 userid, username get 해서 responsedto로 변환하도록 수정하기
+        // user객체 가져오는 로직 지우기
 
         // User 객체 가져오기
         User user = userRepository.findByUserId(userDetails.getUserId())

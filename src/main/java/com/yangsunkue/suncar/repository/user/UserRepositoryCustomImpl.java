@@ -18,6 +18,9 @@ public class UserRepositoryCustomImpl extends Querydsl4RepositorySupport impleme
      * 스프링은 컨테이너에서 객체를 찾아, 생성자의 인자로 자동으로 전달한다.
      *
      * 이 클래스는 @Repository 어노테이션이 달려 있기 때문에 자동으로 빈으로 등록되고 인식되는 것이다.
+     *
+     * Querydsl4RepositorySupport를 상속받아 QueryDSL의 타입 안전성과
+     * 편리한 쿼리 작성 기능을 활용한다.
      */
 
 

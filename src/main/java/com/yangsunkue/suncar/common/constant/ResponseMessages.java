@@ -7,4 +7,10 @@ public class ResponseMessages {
      */
     public static final String USER_CREATED = "회원가입이 완료되었습니다.";
     public static final String LOGIN_SUCCESS = "로그인에 성공했습니다.";
+
+    /**
+     * User 관련 응답 메시지
+     */
+    public static final String USER_PROFILE_RETRIEVED = "회원 정보를 조회하였습니다.";
+
 }
