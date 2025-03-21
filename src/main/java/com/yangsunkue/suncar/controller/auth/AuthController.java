@@ -59,5 +59,4 @@ public class AuthController {
 
         return ResponseDto.of(ResponseMessages.LOGIN_SUCCESS, response);
     }
-
 }

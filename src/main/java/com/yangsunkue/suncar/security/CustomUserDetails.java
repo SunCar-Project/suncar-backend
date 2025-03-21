@@ -22,6 +22,8 @@ public class CustomUserDetails implements UserDetails {
     private final String userId;    // 사용자 ID
     private final String username;  // 원래 username
     private final String password;
+    private final String email;
+    private final String phoneNumber;
     private final UserRole role;
 
     @Builder.Default
