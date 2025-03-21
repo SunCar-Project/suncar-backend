@@ -1,15 +1,13 @@
-package com.yangsunkue.suncar.controller.auth;
+package com.yangsunkue.suncar.controller.user;
 
 import com.yangsunkue.suncar.common.constant.ResponseMessages;
 import com.yangsunkue.suncar.dto.ResponseDto;
 import com.yangsunkue.suncar.dto.user.UserProfileResponseDto;
+import com.yangsunkue.suncar.dto.user.UserProfileUpdateRequestDto;
 import com.yangsunkue.suncar.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 유저 관련 컨트롤러 입니다.
@@ -30,4 +28,30 @@ public class UserController {
         UserProfileResponseDto userProfile = userService.getCurrentUserProfile();
         return ResponseDto.of(ResponseMessages.USER_PROFILE_RETRIEVED, userProfile);
     }
+
+    /**
+     * 현재 사용자 정보를 수정합니다.
+     */
+    @PatchMapping("/me")
+    public ResponseDto<UserProfileResponseDto> updateCurrentUserProfile(@RequestBody UserProfileUpdateRequestDto dto) {
+        UserProfileResponseDto updatedProfile = userService.updateCurrentUserProfile(dto);
+        return ResponseDto.of(ResponseMessages.USER_PROFILE_UPDATED, updatedProfile);
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
