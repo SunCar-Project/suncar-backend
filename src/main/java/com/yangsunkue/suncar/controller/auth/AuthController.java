@@ -7,6 +7,8 @@ import com.yangsunkue.suncar.dto.auth.LoginResponseDto;
 import com.yangsunkue.suncar.dto.auth.SignUpRequestDto;
 import com.yangsunkue.suncar.dto.auth.SignUpResponseDto;
 import com.yangsunkue.suncar.service.auth.AuthService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,7 @@ import java.net.URI;
 @RestController
 @RequestMapping("/auth")
 @ResponseStatus(HttpStatus.OK)
+@Tag(name = "Auth")
 @RequiredArgsConstructor
 public class AuthController {
 
@@ -34,6 +37,7 @@ public class AuthController {
      * 일반 회원가입을 진행합니다.
      */
     @PostMapping("/signup")
+    @Operation(summary = "일반 회원가입")
     public ResponseEntity<ResponseDto<SignUpResponseDto>> signUp(@RequestBody SignUpRequestDto dto) {
 
         SignUpResponseDto created = authService.createUser(dto);
@@ -53,6 +57,7 @@ public class AuthController {
      * JWT 토큰을 발급합니다.
      */
     @PostMapping("/login")
+    @Operation(summary = "로그인")
     public ResponseDto<LoginResponseDto> login(@RequestBody LoginRequestDto dto) {
 
         LoginResponseDto response = authService.login(dto);
