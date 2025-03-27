@@ -4,10 +4,11 @@ import com.yangsunkue.suncar.common.enums.CarListingStatus;
 import com.yangsunkue.suncar.entity.BaseEntity;
 import com.yangsunkue.suncar.entity.user.User;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLRestriction;
 
 import java.math.BigDecimal;
 
@@ -17,20 +18,20 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "car_listing")
 @SQLDelete(sql = "UPDATE car_listing SET is_deleted = true WHERE id = ?")
-@SQLRestriction("is_deleted = false")
-@AllArgsConstructor
-@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
 public class CarListing extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "car_id", nullable = false)
     private Car car;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seller_id", nullable = false)
     private User user;
 

@@ -2,10 +2,11 @@ package com.yangsunkue.suncar.entity.car;
 
 import com.yangsunkue.suncar.entity.BaseEntity;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.SQLRestriction;
 
 /**
  * 판매 등록된 차량의 이미지를 관리하는 엔티티입니다.
@@ -13,16 +14,16 @@ import org.hibernate.annotations.SQLRestriction;
 @Entity
 @Table(name = "car_listing_image")
 @SQLDelete(sql = "UPDATE car_listing_image SET is_deleted = true WHERE id = ?")
-@SQLRestriction("is_deleted = false")
-@AllArgsConstructor
-@NoArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Builder
 public class CarListingImage extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "listing_id", nullable = false)
     private CarListing carListing;
 
