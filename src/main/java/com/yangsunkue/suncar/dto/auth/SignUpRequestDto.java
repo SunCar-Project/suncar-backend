@@ -22,14 +22,13 @@ public class SignUpRequestDto {
     private UserRole role;
 
     public static User toEntity(SignUpRequestDto dto, String hashedPassword) {
-        return new User(
-                null,
-                dto.getUserId(),
-                dto.getEmail(),
-                dto.getUsername(),
-                hashedPassword,
-                dto.getPhoneNumber(),
-                dto.getRole()
-        );
+        return User.builder()
+                .userId(dto.getUserId())
+                .email(dto.getEmail())
+                .username(dto.getUsername())
+                .passwordHash(hashedPassword)
+                .phoneNumber(dto.getPhoneNumber())
+                .role(dto.getRole())
+                .build();
     }
 }

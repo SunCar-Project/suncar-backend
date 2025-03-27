@@ -4,12 +4,14 @@ import com.yangsunkue.suncar.common.constant.ResponseMessages;
 import com.yangsunkue.suncar.dto.ResponseDto;
 import com.yangsunkue.suncar.dto.user.UserProfileResponseDto;
 import com.yangsunkue.suncar.dto.user.UserProfileUpdateRequestDto;
+import com.yangsunkue.suncar.security.CustomUserDetails;
 import com.yangsunkue.suncar.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -30,8 +32,10 @@ public class UserController {
      */
     @GetMapping("/me")
     @Operation(summary = "현재 사용자 정보 조회")
-    public ResponseDto<UserProfileResponseDto> getCurrentUserProfile() {
-        UserProfileResponseDto userProfile = userService.getCurrentUserProfile();
+    public ResponseDto<UserProfileResponseDto> getCurrentUserProfile(
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
+        UserProfileResponseDto userProfile = userService.getCurrentUserProfile(userDetails);
         return ResponseDto.of(ResponseMessages.USER_PROFILE_RETRIEVED, userProfile);
     }
 
@@ -40,8 +44,11 @@ public class UserController {
      */
     @PatchMapping("/me")
     @Operation(summary = "현재 사용자 정보 수정")
-    public ResponseDto<UserProfileResponseDto> updateCurrentUserProfile(@RequestBody UserProfileUpdateRequestDto dto) {
-        UserProfileResponseDto updatedProfile = userService.updateCurrentUserProfile(dto);
+    public ResponseDto<UserProfileResponseDto> updateCurrentUserProfile(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestBody UserProfileUpdateRequestDto dto
+    ) {
+        UserProfileResponseDto updatedProfile = userService.updateCurrentUserProfile(userDetails, dto);
         return ResponseDto.of(ResponseMessages.USER_PROFILE_UPDATED, updatedProfile);
     }
 }
