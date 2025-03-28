@@ -1,11 +1,10 @@
 package com.yangsunkue.suncar.dto.auth;
 
 import com.yangsunkue.suncar.entity.user.User;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Setter
 public class LoginResponseDto {

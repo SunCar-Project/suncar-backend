@@ -2,14 +2,13 @@ package com.yangsunkue.suncar.dto.auth;
 
 import com.yangsunkue.suncar.entity.user.User;
 import com.yangsunkue.suncar.common.enums.UserRole;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 
 /**
  * 회원가입 요청 데이터를 전달받는 dto 입니다.
  */
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @ToString
 public class SignUpRequestDto {
