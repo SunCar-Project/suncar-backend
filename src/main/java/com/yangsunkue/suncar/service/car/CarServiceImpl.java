@@ -1,34 +1,31 @@
 package com.yangsunkue.suncar.service.car;
 
-import com.yangsunkue.suncar.common.enums.BrandName;
-import com.yangsunkue.suncar.dto.car.CarListResponseDto;
-import com.yangsunkue.suncar.repository.car.CarListingRepository;
+import com.yangsunkue.suncar.dto.car.CarDto;
+import com.yangsunkue.suncar.entity.car.Car;
+import com.yangsunkue.suncar.repository.car.CarRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-
+/**
+ * Car 엔티티 관련 서비스 클래스 입니다.
+ */
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class CarServiceImpl implements CarService{
+public class CarServiceImpl implements CarService {
 
-    private final CarListingRepository carListingRepository;
+    private final CarRepository carRepository;
 
     /**
-     * 판매중인 차량 목록을 조회합니다.
+     * 차량 정보(Car)를 생성합니다.
      */
     @Override
-    public List<CarListResponseDto> getCarList() {
-        List<CarListResponseDto> carList = carListingRepository.getCarList();
+    @Transactional
+    public Car createCar(CarDto dto) {
+        Car carEntity = CarDto.toEntity(dto);
+        Car saved = carRepository.save(carEntity);
 
-        /** BrandName enum을 value로 변경 */
-        carList.forEach(dto -> {
-            BrandName brandNameEnum = BrandName.valueOf(dto.getBrandName());
-            dto.setBrandName(brandNameEnum.getValue());
-        });
-
-        return carList;
+        return saved;
     }
 }

@@ -3,11 +3,10 @@ package com.yangsunkue.suncar.dto.user;
 import com.yangsunkue.suncar.common.enums.UserRole;
 import com.yangsunkue.suncar.entity.user.User;
 import com.yangsunkue.suncar.security.CustomUserDetails;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 
-@AllArgsConstructor
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @ToString
 public class UserProfileResponseDto {
