@@ -8,7 +8,7 @@ import lombok.*;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@ToString
+@Builder
 public class UserProfileResponseDto {
 
     private String userId;
@@ -18,22 +18,22 @@ public class UserProfileResponseDto {
     private UserRole role;
 
     public static UserProfileResponseDto fromUserDetails(CustomUserDetails userDetails) {
-        return new UserProfileResponseDto(
-                userDetails.getUserId(),
-                userDetails.getEmail(),
-                userDetails.getUsername(),
-                userDetails.getPhoneNumber(),
-                userDetails.getRole()
-        );
+        return UserProfileResponseDto.builder()
+                .userId(userDetails.getUserId())
+                .email(userDetails.getEmail())
+                .userName(userDetails.getUsername())
+                .phoneNumber(userDetails.getPhoneNumber())
+                .role(userDetails.getRole())
+                .build();
     }
 
     public static UserProfileResponseDto fromUser(User user) {
-        return new UserProfileResponseDto(
-                user.getUserId(),
-                user.getEmail(),
-                user.getUsername(),
-                user.getPhoneNumber(),
-                user.getRole()
-        );
+        return UserProfileResponseDto.builder()
+                .userId(user.getUserId())
+                .email(user.getEmail())
+                .userName(user.getUsername())
+                .phoneNumber(user.getPhoneNumber())
+                .role(user.getRole())
+                .build();
     }
 }

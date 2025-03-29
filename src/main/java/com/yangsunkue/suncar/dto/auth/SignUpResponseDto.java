@@ -8,6 +8,7 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @ToString
+@Builder
 public class SignUpResponseDto {
 
     private Long id;
@@ -17,14 +18,14 @@ public class SignUpResponseDto {
     private String phoneNumber;
     private UserRole role;
 
-    public static SignUpResponseDto toDto(User user) {
-        return new SignUpResponseDto(
-                user.getId(),
-                user.getUserId(),
-                user.getEmail(),
-                user.getUsername(),
-                user.getPhoneNumber(),
-                user.getRole()
-        );
+    public static SignUpResponseDto fromUser(User user) {
+        return SignUpResponseDto.builder()
+                .id(user.getId())
+                .userId(user.getUserId())
+                .email(user.getEmail())
+                .username(user.getUsername())
+                .phoneNumber(user.getPhoneNumber())
+                .role(user.getRole())
+                .build();
     }
 }

@@ -1,6 +1,7 @@
 package com.yangsunkue.suncar.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 
 /**
@@ -8,8 +9,9 @@ import lombok.Getter;
  *
  * @param <T> 모든 타입의 데이터를 포함할 수 있습니다.
  */
-@Getter
 @AllArgsConstructor
+@Getter
+@Builder
 public class ResponseDto<T> {
 
     private String message;
@@ -17,11 +19,16 @@ public class ResponseDto<T> {
 
     // 데이터가 없는 경우 -> 메시지만 리턴
     public static <T> ResponseDto<T> of(String message) {
-        return new ResponseDto<>(message, null);
+        return ResponseDto.<T>builder()
+                .message(message)
+                .build();
     }
 
     // 데이터가 있는 경우 -> 메시지 + 데이터 리턴
     public static <T> ResponseDto<T> of(String message, T data) {
-        return new ResponseDto<>(message, data);
+        return ResponseDto.<T>builder()
+                .message(message)
+                .data(data)
+                .build();
     }
 }

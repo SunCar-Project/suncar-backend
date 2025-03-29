@@ -15,13 +15,13 @@ public interface CarManagementService {
     /**
      * 판매중인 차량 목록을 조회합니다.
      */
-    public List<CarListResponseDto> getCarList();
+    List<CarListResponseDto> getCarList();
 
 
     /**
      * 차량을 판매등록합니다.
      */
-    public RegisterCarResponseDto registerCar(
+    RegisterCarResponseDto registerCar(
             MultipartFile mainImage,
             List<MultipartFile> additionalImages,
             String carNumber,
