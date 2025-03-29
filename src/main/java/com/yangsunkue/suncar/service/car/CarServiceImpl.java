@@ -18,13 +18,13 @@ public class CarServiceImpl implements CarService {
     private final CarRepository carRepository;
 
     /**
-     * 차량 정보(Car)를 생성합니다.
+     * 차량 정보를 생성합니다.
      */
     @Override
     @Transactional
     public Car createCar(CarDto dto) {
-        Car carEntity = CarDto.toEntity(dto);
-        Car saved = carRepository.save(carEntity);
+        Car car = CarDto.toEntity(dto);
+        Car saved = carRepository.save(car);
 
         return saved;
     }

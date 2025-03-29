@@ -1,6 +1,5 @@
 package com.yangsunkue.suncar.exception;
 
-import com.yangsunkue.suncar.common.constant.ErrorMessages;
 import org.springframework.http.HttpStatus;
 
 public class UnauthorizedException extends BaseException{

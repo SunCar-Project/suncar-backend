@@ -35,7 +35,7 @@ public class UserController {
     public ResponseDto<UserProfileResponseDto> getCurrentUserProfile(
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
-        UserProfileResponseDto userProfile = userService.getCurrentUserProfile(userDetails);
+        UserProfileResponseDto userProfile = UserProfileResponseDto.fromUserDetails(userDetails);
         return ResponseDto.of(ResponseMessages.USER_PROFILE_RETRIEVED, userProfile);
     }
 

@@ -30,7 +30,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CarController {
 
-    @Qualifier("CarManagementServiceDummyImpl")
+    @Qualifier("CarManagementServiceImpl")
     private final CarManagementService carManagementService;
 
     /**
@@ -46,30 +46,30 @@ public class CarController {
     /**
      * 차량을 판매등록합니다.
      */
-    @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @SecurityRequirement(name = "bearer-jwt")
-    @Operation(summary = "차량 판매 등록")
-    public ResponseEntity<ResponseDto<RegisterCarResponseDto>> registerCar(
-            @RequestPart("mainImage") MultipartFile mainImage,
-            @RequestPart("additionalImages") List<MultipartFile> additionalImages,
-            @RequestPart("carNumber") String carNumber,
-            @RequestPart("price") BigDecimal price
-    ) {
-            RegisterCarResponseDto registeredCar = carManagementService.registerCar(
-                    mainImage,
-                    additionalImages,
-                    carNumber,
-                    price
-            );
-            ResponseDto<RegisterCarResponseDto> response = ResponseDto.of(ResponseMessages.CAR_REGISTERED, registeredCar);
-
-            /**
-             * TODO
-             * 등록된 차량 상세조회 페이지 리턴해주기
-             */
-            return ResponseEntity.created(URI.create("/cars"))
-                    .body(response);
-    }
+//    @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+//    @SecurityRequirement(name = "bearer-jwt")
+//    @Operation(summary = "차량 판매 등록")
+//    public ResponseEntity<ResponseDto<RegisterCarResponseDto>> registerCar(
+//            @RequestPart("mainImage") MultipartFile mainImage,
+//            @RequestPart("additionalImages") List<MultipartFile> additionalImages,
+//            @RequestPart("carNumber") String carNumber,
+//            @RequestPart("price") BigDecimal price
+//    ) {
+//            RegisterCarResponseDto registeredCar = carManagementService.registerCar(
+//                    mainImage,
+//                    additionalImages,
+//                    carNumber,
+//                    price
+//            );
+//            ResponseDto<RegisterCarResponseDto> response = ResponseDto.of(ResponseMessages.CAR_REGISTERED, registeredCar);
+//
+//            /**
+//             * TODO
+//             * 등록된 차량 상세조회 페이지 리턴해주기
+//             */
+//            return ResponseEntity.created(URI.create("/cars"))
+//                    .body(response);
+//    }
 
     /**
      * 차량을 판매등록합니다. - 더미 데이터 입력용 컨트롤러 입니다.

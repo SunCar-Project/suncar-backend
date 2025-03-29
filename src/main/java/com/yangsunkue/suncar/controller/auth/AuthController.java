@@ -6,6 +6,7 @@ import com.yangsunkue.suncar.dto.auth.LoginRequestDto;
 import com.yangsunkue.suncar.dto.auth.LoginResponseDto;
 import com.yangsunkue.suncar.dto.auth.SignUpRequestDto;
 import com.yangsunkue.suncar.dto.auth.SignUpResponseDto;
+import com.yangsunkue.suncar.entity.user.User;
 import com.yangsunkue.suncar.service.auth.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -40,9 +41,9 @@ public class AuthController {
     @Operation(summary = "일반 회원가입")
     public ResponseEntity<ResponseDto<SignUpResponseDto>> signUp(@RequestBody SignUpRequestDto dto) {
 
-        SignUpResponseDto created = authService.createUser(dto);
-
-        ResponseDto<SignUpResponseDto> response = ResponseDto.of(ResponseMessages.USER_CREATED, created);
+        User created = authService.createUser(dto);
+        SignUpResponseDto userDto = SignUpResponseDto.fromUser(created);
+        ResponseDto<SignUpResponseDto> response = ResponseDto.of(ResponseMessages.USER_CREATED, userDto);
 
         /**
          * TODO
@@ -59,9 +60,7 @@ public class AuthController {
     @PostMapping("/login")
     @Operation(summary = "로그인")
     public ResponseDto<LoginResponseDto> login(@RequestBody LoginRequestDto dto) {
-
         LoginResponseDto response = authService.login(dto);
-
         return ResponseDto.of(ResponseMessages.LOGIN_SUCCESS, response);
     }
 }

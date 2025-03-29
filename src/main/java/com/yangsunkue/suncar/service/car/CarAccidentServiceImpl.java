@@ -16,24 +16,24 @@ import java.util.stream.Collectors;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class CarAccidentServiceImpl implements CarAccidentService{
+public class CarAccidentServiceImpl implements CarAccidentService {
 
     private final CarAccidentRepository carAccidentRepository;
 
     /**
-     * 차량 사고이력(CarAccident)을 다수 생성합니다.
+     * 차량 사고이력을 다수 생성합니다.
      */
     @Override
     @Transactional
-    public List<CarAccident> createCarAccidentList(List<CarAccidentDto> dtoList) {
+    public List<CarAccident> createAccidents(List<CarAccidentDto> dtos) {
 
         // 모든 DTO를 엔티티로 변환
-        List<CarAccident> carAccidentList = dtoList.stream()
+        List<CarAccident> carAccidents = dtos.stream()
                 .map(CarAccidentDto::toEntity)
                 .collect(Collectors.toList());
 
         // DB에 저장하고 리턴
-        List<CarAccident> savedCarAccidentList = carAccidentRepository.saveAll(carAccidentList);
-        return savedCarAccidentList;
+        List<CarAccident> savedAccidents = carAccidentRepository.saveAll(carAccidents);
+        return savedAccidents;
     }
 }

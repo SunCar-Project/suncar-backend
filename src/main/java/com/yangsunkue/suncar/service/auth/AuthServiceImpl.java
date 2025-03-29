@@ -36,7 +36,7 @@ public class AuthServiceImpl implements AuthService {
      */
     @Override
     @Transactional
-    public SignUpResponseDto createUser(SignUpRequestDto dto) {
+    public User createUser(SignUpRequestDto dto) {
 
         // 중복 검사
         if (userRepository.existsByUserId(dto.getUserId())) {
@@ -54,11 +54,8 @@ public class AuthServiceImpl implements AuthService {
         // DB 에 저장
         User saved = userRepository.save(userEntity);
 
-        // ResponseDto로 변환
-        SignUpResponseDto savedDto = SignUpResponseDto.toDto(saved);
-
         // 리턴
-        return savedDto;
+        return saved;
     }
 
     /**
@@ -89,7 +86,7 @@ public class AuthServiceImpl implements AuthService {
         String token = jwtUtil.generateToken(userDetails);
 
         // responseDto로 변환
-        LoginResponseDto responseDto = LoginResponseDto.toDto(user, token);
+        LoginResponseDto responseDto = LoginResponseDto.fromUserAndToken(user, token);
 
         // 리턴
         return responseDto;

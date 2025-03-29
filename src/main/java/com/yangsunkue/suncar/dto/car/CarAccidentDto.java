@@ -2,8 +2,6 @@ package com.yangsunkue.suncar.dto.car;
 
 import com.yangsunkue.suncar.entity.car.Car;
 import com.yangsunkue.suncar.entity.car.CarAccident;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -14,15 +12,12 @@ import java.time.LocalDate;
 @Getter
 public class CarAccidentDto {
 
-    @NotNull
     private Long carId;
 
     private LocalDate accidentDate;
 
-    @Size(max = 20)
     private String accidentType;
 
-    @Size(max = 20)
     private String processingType;
 
     public static CarAccident toEntity(CarAccidentDto dto) {

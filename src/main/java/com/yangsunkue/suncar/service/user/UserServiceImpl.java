@@ -19,15 +19,6 @@ public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
 
     /**
-     * 현재 사용자 정보를 리턴합니다.
-     */
-    @Override
-    public UserProfileResponseDto getCurrentUserProfile(CustomUserDetails userDetails) {
-        UserProfileResponseDto responseDto = UserProfileResponseDto.fromUserDetails(userDetails);
-        return responseDto;
-    }
-
-    /**
      * 현재 사용자 정보를 수정합니다.
      */
     @Override
