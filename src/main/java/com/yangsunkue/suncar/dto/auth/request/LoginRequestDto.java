@@ -1,4 +1,4 @@
-package com.yangsunkue.suncar.dto.auth;
+package com.yangsunkue.suncar.dto.auth.request;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

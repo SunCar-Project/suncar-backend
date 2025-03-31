@@ -1,6 +1,6 @@
 package com.yangsunkue.suncar.entity.user;
 
-import com.yangsunkue.suncar.dto.user.UserProfileUpdateRequestDto;
+import com.yangsunkue.suncar.dto.user.request.UserProfileUpdateRequestDto;
 import com.yangsunkue.suncar.entity.BaseEntity;
 import com.yangsunkue.suncar.common.enums.UserRole;
 import jakarta.persistence.*;

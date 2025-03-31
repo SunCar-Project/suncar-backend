@@ -1,7 +1,7 @@
 package com.yangsunkue.suncar.service.user;
 
-import com.yangsunkue.suncar.dto.user.UserProfileResponseDto;
-import com.yangsunkue.suncar.dto.user.UserProfileUpdateRequestDto;
+import com.yangsunkue.suncar.dto.user.response.UserProfileResponseDto;
+import com.yangsunkue.suncar.dto.user.request.UserProfileUpdateRequestDto;
 import com.yangsunkue.suncar.security.CustomUserDetails;
 
 public interface UserService {

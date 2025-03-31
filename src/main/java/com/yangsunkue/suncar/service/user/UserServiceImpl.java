@@ -1,8 +1,8 @@
 package com.yangsunkue.suncar.service.user;
 
 import com.yangsunkue.suncar.common.constant.ErrorMessages;
-import com.yangsunkue.suncar.dto.user.UserProfileResponseDto;
-import com.yangsunkue.suncar.dto.user.UserProfileUpdateRequestDto;
+import com.yangsunkue.suncar.dto.user.response.UserProfileResponseDto;
+import com.yangsunkue.suncar.dto.user.request.UserProfileUpdateRequestDto;
 import com.yangsunkue.suncar.entity.user.User;
 import com.yangsunkue.suncar.exception.NotFoundException;
 import com.yangsunkue.suncar.repository.user.UserRepository;

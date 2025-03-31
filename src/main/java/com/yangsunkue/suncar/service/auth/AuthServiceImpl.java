@@ -1,10 +1,9 @@
 package com.yangsunkue.suncar.service.auth;
 
 import com.yangsunkue.suncar.common.constant.ErrorMessages;
-import com.yangsunkue.suncar.dto.auth.LoginRequestDto;
-import com.yangsunkue.suncar.dto.auth.LoginResponseDto;
-import com.yangsunkue.suncar.dto.auth.SignUpRequestDto;
-import com.yangsunkue.suncar.dto.auth.SignUpResponseDto;
+import com.yangsunkue.suncar.dto.auth.request.LoginRequestDto;
+import com.yangsunkue.suncar.dto.auth.response.LoginResponseDto;
+import com.yangsunkue.suncar.dto.auth.request.SignUpRequestDto;
 import com.yangsunkue.suncar.entity.user.User;
 import com.yangsunkue.suncar.exception.DuplicateResourceException;
 import com.yangsunkue.suncar.exception.NotFoundException;
