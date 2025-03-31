@@ -2,8 +2,8 @@ package com.yangsunkue.suncar.controller.user;
 
 import com.yangsunkue.suncar.common.constant.ResponseMessages;
 import com.yangsunkue.suncar.dto.ResponseDto;
-import com.yangsunkue.suncar.dto.user.UserProfileResponseDto;
-import com.yangsunkue.suncar.dto.user.UserProfileUpdateRequestDto;
+import com.yangsunkue.suncar.dto.user.response.UserProfileResponseDto;
+import com.yangsunkue.suncar.dto.user.request.UserProfileUpdateRequestDto;
 import com.yangsunkue.suncar.security.CustomUserDetails;
 import com.yangsunkue.suncar.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;

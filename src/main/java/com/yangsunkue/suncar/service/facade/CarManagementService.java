@@ -1,7 +1,7 @@
 package com.yangsunkue.suncar.service.facade;
 
 import com.yangsunkue.suncar.dto.car.CarListResponseDto;
-import com.yangsunkue.suncar.dto.car.RegisterCarResponseDto;
+import com.yangsunkue.suncar.dto.car.response.RegisterCarResponseDto;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;

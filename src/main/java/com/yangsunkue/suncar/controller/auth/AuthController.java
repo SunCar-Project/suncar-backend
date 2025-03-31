@@ -2,10 +2,10 @@ package com.yangsunkue.suncar.controller.auth;
 
 import com.yangsunkue.suncar.common.constant.ResponseMessages;
 import com.yangsunkue.suncar.dto.ResponseDto;
-import com.yangsunkue.suncar.dto.auth.LoginRequestDto;
-import com.yangsunkue.suncar.dto.auth.LoginResponseDto;
-import com.yangsunkue.suncar.dto.auth.SignUpRequestDto;
-import com.yangsunkue.suncar.dto.auth.SignUpResponseDto;
+import com.yangsunkue.suncar.dto.auth.request.LoginRequestDto;
+import com.yangsunkue.suncar.dto.auth.response.LoginResponseDto;
+import com.yangsunkue.suncar.dto.auth.request.SignUpRequestDto;
+import com.yangsunkue.suncar.dto.auth.response.SignUpResponseDto;
 import com.yangsunkue.suncar.entity.user.User;
 import com.yangsunkue.suncar.service.auth.AuthService;
 import io.swagger.v3.oas.annotations.Operation;

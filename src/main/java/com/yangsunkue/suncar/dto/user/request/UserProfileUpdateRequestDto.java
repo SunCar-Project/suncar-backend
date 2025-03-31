@@ -1,4 +1,4 @@
-package com.yangsunkue.suncar.dto.user;
+package com.yangsunkue.suncar.dto.user.request;
 
 import lombok.*;
 
