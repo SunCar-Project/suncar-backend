@@ -7,6 +7,7 @@ import com.yangsunkue.suncar.dto.auth.request.SignUpRequestDto;
 import com.yangsunkue.suncar.entity.user.User;
 import com.yangsunkue.suncar.exception.DuplicateResourceException;
 import com.yangsunkue.suncar.exception.NotFoundException;
+import com.yangsunkue.suncar.mapper.UserMapper;
 import com.yangsunkue.suncar.repository.user.UserRepository;
 import com.yangsunkue.suncar.security.CustomUserDetails;
 import com.yangsunkue.suncar.security.JwtUtil;
@@ -29,6 +30,7 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
+    private final UserMapper userMapper;
 
     /**
      * 일반 회원가입을 진행합니다.
@@ -48,10 +50,10 @@ public class AuthServiceImpl implements AuthService {
 
         // 패스워드 해시 및 엔티티로 변환
         String hashedPassword = passwordEncoder.encode(dto.getPassword());
-        User userEntity = SignUpRequestDto.toEntity(dto, hashedPassword);
+        User user = userMapper.fromSignUpRequestDto(dto, hashedPassword);
 
         // DB 에 저장
-        User saved = userRepository.save(userEntity);
+        User saved = userRepository.save(user);
 
         // 리턴
         return saved;
@@ -85,9 +87,9 @@ public class AuthServiceImpl implements AuthService {
         String token = jwtUtil.generateToken(userDetails);
 
         // responseDto로 변환
-        LoginResponseDto responseDto = LoginResponseDto.fromUserAndToken(user, token);
+        LoginResponseDto loginDto = userMapper.toLoginResponseDto(user, token);
 
         // 리턴
-        return responseDto;
+        return loginDto;
     }
 }

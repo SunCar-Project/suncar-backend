@@ -13,19 +13,7 @@ import java.time.LocalDate;
 public class CarAccidentDto {
 
     private Long carId;
-
     private LocalDate accidentDate;
-
     private String accidentType;
-
     private String processingType;
-
-    public static CarAccident toEntity(CarAccidentDto dto) {
-        return CarAccident.builder()
-                .car(Car.builder().id(dto.getCarId()).build())
-                .accidentDate(dto.getAccidentDate())
-                .accidentType(dto.getAccidentType())
-                .processingType(dto.getProcessingType())
-                .build();
-    }
 }

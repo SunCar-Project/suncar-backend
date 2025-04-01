@@ -7,6 +7,7 @@ import com.yangsunkue.suncar.dto.auth.response.LoginResponseDto;
 import com.yangsunkue.suncar.dto.auth.request.SignUpRequestDto;
 import com.yangsunkue.suncar.dto.auth.response.SignUpResponseDto;
 import com.yangsunkue.suncar.entity.user.User;
+import com.yangsunkue.suncar.mapper.UserMapper;
 import com.yangsunkue.suncar.service.auth.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -28,6 +29,7 @@ import java.net.URI;
 public class AuthController {
 
     private final AuthService authService;
+    private final UserMapper userMapper;
 
     @GetMapping("/hello")
     public String hello() {
@@ -42,7 +44,7 @@ public class AuthController {
     public ResponseEntity<ResponseDto<SignUpResponseDto>> signUp(@RequestBody SignUpRequestDto dto) {
 
         User created = authService.createUser(dto);
-        SignUpResponseDto userDto = SignUpResponseDto.fromUser(created);
+        SignUpResponseDto userDto = userMapper.toSignUpResponseDto(created);
         ResponseDto<SignUpResponseDto> response = ResponseDto.of(ResponseMessages.USER_CREATED, userDto);
 
         /**

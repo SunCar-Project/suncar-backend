@@ -12,16 +12,6 @@ import lombok.*;
 public class CarOptionDto {
 
     private Long carId;
-
     private String optionName;
-
     private OptionInstallStatus installStatus;
-
-    public static CarOption toEntity(CarOptionDto dto) {
-        return CarOption.builder()
-                .car(Car.builder().id(dto.getCarId()).build())
-                .optionName(dto.getOptionName())
-                .installStatus(dto.getInstallStatus())
-                .build();
-    }
 }

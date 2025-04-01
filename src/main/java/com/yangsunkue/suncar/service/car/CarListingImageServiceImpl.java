@@ -5,6 +5,7 @@ import com.yangsunkue.suncar.dto.car.CarListingImageDto;
 import com.yangsunkue.suncar.entity.car.CarListingImage;
 import com.yangsunkue.suncar.exception.DuplicateResourceException;
 import com.yangsunkue.suncar.exception.InvalidArgumentException;
+import com.yangsunkue.suncar.mapper.CarMapper;
 import com.yangsunkue.suncar.repository.car.CarListingImageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 public class CarListingImageServiceImpl implements CarListingImageService {
 
     private final CarListingImageRepository carListingImageRepository;
+    private final CarMapper carMapper;
 
     /**
      * 차량 판매등록 메인 이미지를 생성합니다.
@@ -43,7 +45,7 @@ public class CarListingImageServiceImpl implements CarListingImageService {
         }
 
         // 엔티티 변환 후 DB 저장 및 리턴
-        CarListingImage carListingImageEntity = CarListingImageDto.toEntity(dto);
+        CarListingImage carListingImageEntity = carMapper.fromListingImageDto(dto);
         CarListingImage saved = carListingImageRepository.save(carListingImageEntity);
 
         return saved;
@@ -67,7 +69,7 @@ public class CarListingImageServiceImpl implements CarListingImageService {
 
         // 모든 DTO를 엔티티로 변환 후 DB 저장 및 리턴
         List<CarListingImage> carListingImages = dtos.stream()
-                .map(CarListingImageDto::toEntity)
+                .map(carMapper::fromListingImageDto)
                 .collect(Collectors.toList());
 
         List<CarListingImage> savedImages = carListingImageRepository.saveAll(carListingImages);
