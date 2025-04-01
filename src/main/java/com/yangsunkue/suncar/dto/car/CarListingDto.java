@@ -15,22 +15,8 @@ import java.math.BigDecimal;
 public class CarListingDto {
 
     private Long carId;
-
     private Long sellerId;
-
     private BigDecimal price;
-
     private String description;
-
     private CarListingStatus status;
-
-    public static CarListing toEntity(CarListingDto dto) {
-        return CarListing.builder()
-                .car(Car.builder().id(dto.getCarId()).build())
-                .user(User.builder().id(dto.getSellerId()).build())
-                .price(dto.getPrice())
-                .description(dto.getDescription())
-                .status(dto.getStatus())
-                .build();
-    }
 }

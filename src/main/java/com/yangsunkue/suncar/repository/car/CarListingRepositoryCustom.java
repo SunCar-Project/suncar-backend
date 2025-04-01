@@ -1,6 +1,6 @@
 package com.yangsunkue.suncar.repository.car;
 
-import com.yangsunkue.suncar.dto.car.CarListResponseDto;
+import com.yangsunkue.suncar.dto.car.response.CarListResponseDto;
 
 import java.util.List;
 

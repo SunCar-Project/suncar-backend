@@ -15,46 +15,16 @@ import java.time.LocalDate;
 public class CarDto {
 
     private Long modelId;
-
     private String carName;
-
     private String carNumber;
-
     private String displacement;
-
     private String fuelType;
-
     private Integer year;
-
     private Integer month;
-
     private String bodyShape;
-
     private String modelType;
-
     private LocalDate firstInsuranceDate;
-
     private String identificationNumber;
-
     private BigDecimal minPrice;
-
     private BigDecimal maxPrice;
-
-    public static Car toEntity(CarDto dto) {
-        return Car.builder()
-                .model(Model.builder().id(dto.getModelId()).build())
-                .carName(dto.getCarName())
-                .carNumber(dto.getCarNumber())
-                .displacement(dto.getDisplacement())
-                .fuelType(dto.getFuelType())
-                .year(dto.getYear())
-                .month(dto.getMonth())
-                .bodyShape(dto.getBodyShape())
-                .modelType(dto.getModelType())
-                .firstInsuranceDate(dto.getFirstInsuranceDate())
-                .identificationNumber(dto.getIdentificationNumber())
-                .minPrice(dto.getMinPrice())
-                .maxPrice(dto.getMaxPrice())
-                .build();
-    }
 }

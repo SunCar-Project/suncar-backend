@@ -2,6 +2,7 @@ package com.yangsunkue.suncar.service.car;
 
 import com.yangsunkue.suncar.dto.car.CarAccidentRepairDto;
 import com.yangsunkue.suncar.entity.car.CarAccidentRepair;
+import com.yangsunkue.suncar.mapper.CarMapper;
 import com.yangsunkue.suncar.repository.car.CarAccidentRepairRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 public class CarAccidentRepairServiceImpl implements CarAccidentRepairService {
 
     private final CarAccidentRepairRepository carAccidentRepairRepository;
+    private final CarMapper carMapper;
 
     /**
      * 차량 사고이력 상세정보를 다수 생성합니다.
@@ -26,7 +28,7 @@ public class CarAccidentRepairServiceImpl implements CarAccidentRepairService {
 
         // 모든 DTO를 엔티티로 변환
         List<CarAccidentRepair> carAccidentRepairs = dtos.stream()
-                .map(CarAccidentRepairDto::toEntity)
+                .map(carMapper::fromAccidentRepairDto)
                 .collect(Collectors.toList());
 
         List<CarAccidentRepair> savedRepairs = carAccidentRepairRepository.saveAll(carAccidentRepairs);

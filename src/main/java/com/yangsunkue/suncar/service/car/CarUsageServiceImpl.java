@@ -3,6 +3,7 @@ package com.yangsunkue.suncar.service.car;
 
 import com.yangsunkue.suncar.dto.car.CarUsageDto;
 import com.yangsunkue.suncar.entity.car.CarUsage;
+import com.yangsunkue.suncar.mapper.CarMapper;
 import com.yangsunkue.suncar.repository.car.CarUsageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 public class CarUsageServiceImpl implements CarUsageService {
 
     private final CarUsageRepository carUsageRepository;
+    private final CarMapper carMapper;
 
     /**
      * 차량 사용이력 정보를 다수 생성합니다.
@@ -30,7 +32,7 @@ public class CarUsageServiceImpl implements CarUsageService {
 
         /** 모든 DTO를 엔티티로 변환 */
         List<CarUsage> carUsages = dtos.stream()
-                .map(CarUsageDto::toEntity)
+                .map(carMapper::fromUsageDto)
                 .collect(Collectors.toList());
 
         /** DB에 저장 후 리턴 */

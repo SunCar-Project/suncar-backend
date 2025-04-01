@@ -17,15 +17,4 @@ public class SignUpResponseDto {
     private String username;
     private String phoneNumber;
     private UserRole role;
-
-    public static SignUpResponseDto fromUser(User user) {
-        return SignUpResponseDto.builder()
-                .id(user.getId())
-                .userId(user.getUserId())
-                .email(user.getEmail())
-                .username(user.getUsername())
-                .phoneNumber(user.getPhoneNumber())
-                .role(user.getRole())
-                .build();
-    }
 }

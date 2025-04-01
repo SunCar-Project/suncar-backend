@@ -11,19 +11,7 @@ import lombok.*;
 public class CarUsageDto {
 
     private Long carId;
-
     private String rentalHistory;
-
     private String businessHistory;
-
     private String governmentHistory;
-
-    public static CarUsage toEntity(CarUsageDto dto) {
-        return CarUsage.builder()
-                .car(Car.builder().id(dto.getCarId()).build())
-                .rentalHistory(dto.getRentalHistory())
-                .businessHistory(dto.getBusinessHistory())
-                .governmentHistory(dto.getGovernmentHistory())
-                .build();
-    }
 }

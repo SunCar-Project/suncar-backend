@@ -19,15 +19,4 @@ public class SignUpRequestDto {
     private String password;
     private String phoneNumber;
     private UserRole role;
-
-    public static User toEntity(SignUpRequestDto dto, String hashedPassword) {
-        return User.builder()
-                .userId(dto.getUserId())
-                .email(dto.getEmail())
-                .username(dto.getUsername())
-                .passwordHash(hashedPassword)
-                .phoneNumber(dto.getPhoneNumber())
-                .role(dto.getRole())
-                .build();
-    }
 }
