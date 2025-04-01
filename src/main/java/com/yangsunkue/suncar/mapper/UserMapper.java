@@ -22,7 +22,7 @@ public interface UserMapper {
 
     /** to Dto */
     @Mapping(source = "accessToken", target = "accessToken")
-    LoginResponseDto toLoginResponseDto(User user, String accessToken);
+    LoginResponseDto toLoginResponseDtoFromUserDetails(CustomUserDetails userDetails, String accessToken);
     SignUpResponseDto toSignUpResponseDto(User user);
     @Mapping(source = "username", target = "userName")
     UserProfileResponseDto toUserProfileResponseDto(User user);

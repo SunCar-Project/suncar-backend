@@ -18,7 +18,7 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class CarManagementServiceImpl implements CarManagementService {
+public class CarFacadeServiceImpl implements CarFacadeService {
 
     private final CarListingRepository carListingRepository;
 
