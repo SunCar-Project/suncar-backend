@@ -2,6 +2,7 @@ package com.yangsunkue.suncar.service.car;
 
 import com.yangsunkue.suncar.dto.car.CarOwnershipChangeDto;
 import com.yangsunkue.suncar.entity.car.CarOwnershipChange;
+import com.yangsunkue.suncar.mapper.CarMapper;
 import com.yangsunkue.suncar.repository.car.CarOwnershipChangeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 public class CarOwnershipChangeServiceImpl implements CarOwnershipChangeService {
 
     private final CarOwnershipChangeRepository carOwnershipChangeRepository;
+    private final CarMapper carMapper;
 
     /**
      * 차량 번호/소유자 변경이력 정보를 다수 생성합니다.
@@ -29,7 +31,7 @@ public class CarOwnershipChangeServiceImpl implements CarOwnershipChangeService 
 
         /** 모든 DTO를 엔티티로 변환 */
         List<CarOwnershipChange> carOwnershipChanges = dtos.stream()
-                .map(CarOwnershipChangeDto::toEntity)
+                .map(carMapper::fromOwnershipChangeDto)
                 .collect(Collectors.toList());
 
         /** DB에 저장 후 리턴 */

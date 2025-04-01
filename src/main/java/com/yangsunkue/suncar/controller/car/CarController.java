@@ -2,7 +2,7 @@ package com.yangsunkue.suncar.controller.car;
 
 import com.yangsunkue.suncar.common.constant.ResponseMessages;
 import com.yangsunkue.suncar.dto.ResponseDto;
-import com.yangsunkue.suncar.dto.car.CarListResponseDto;
+import com.yangsunkue.suncar.dto.car.response.CarListResponseDto;
 import com.yangsunkue.suncar.service.facade.CarManagementService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;

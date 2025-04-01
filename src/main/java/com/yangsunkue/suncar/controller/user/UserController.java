@@ -4,6 +4,7 @@ import com.yangsunkue.suncar.common.constant.ResponseMessages;
 import com.yangsunkue.suncar.dto.ResponseDto;
 import com.yangsunkue.suncar.dto.user.response.UserProfileResponseDto;
 import com.yangsunkue.suncar.dto.user.request.UserProfileUpdateRequestDto;
+import com.yangsunkue.suncar.mapper.UserMapper;
 import com.yangsunkue.suncar.security.CustomUserDetails;
 import com.yangsunkue.suncar.service.user.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+    private final UserMapper userMapper;
 
     /**
      * 현재 사용자 정보를 조회합니다.
@@ -35,7 +37,7 @@ public class UserController {
     public ResponseDto<UserProfileResponseDto> getCurrentUserProfile(
             @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
-        UserProfileResponseDto userProfile = UserProfileResponseDto.fromUserDetails(userDetails);
+        UserProfileResponseDto userProfile = userMapper.toUserProfileResponseDtoFromUserDetails(userDetails);
         return ResponseDto.of(ResponseMessages.USER_PROFILE_RETRIEVED, userProfile);
     }
 
