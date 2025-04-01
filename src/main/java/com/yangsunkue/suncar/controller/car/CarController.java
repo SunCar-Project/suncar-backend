@@ -3,7 +3,7 @@ package com.yangsunkue.suncar.controller.car;
 import com.yangsunkue.suncar.common.constant.ResponseMessages;
 import com.yangsunkue.suncar.dto.ResponseDto;
 import com.yangsunkue.suncar.dto.car.response.CarListResponseDto;
-import com.yangsunkue.suncar.service.facade.CarManagementService;
+import com.yangsunkue.suncar.service.facade.CarFacadeService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -23,8 +23,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CarController {
 
-    @Qualifier("CarManagementServiceImpl")
-    private final CarManagementService carManagementService;
+    @Qualifier("CarFacadeServiceImpl")
+    private final CarFacadeService carFacadeService;
 
     /**
      * 판매중인 차량 목록을 조회합니다.
@@ -32,7 +32,7 @@ public class CarController {
     @GetMapping("")
     @Operation(summary = "판매 차량 목록 조회")
     public ResponseDto<List<CarListResponseDto>> getCarList() {
-        List<CarListResponseDto> carList = carManagementService.getCarList();
+        List<CarListResponseDto> carList = carFacadeService.getCarList();
         return ResponseDto.of(ResponseMessages.CAR_LIST_RETRIEVED, carList);
     }
 
@@ -48,7 +48,7 @@ public class CarController {
 //            @RequestPart("carNumber") String carNumber,
 //            @RequestPart("price") BigDecimal price
 //    ) {
-//            RegisterCarResponseDto registeredCar = carManagementService.registerCar(
+//            RegisterCarResponseDto registeredCar = carFacadeService.registerCar(
 //                    mainImage,
 //                    additionalImages,
 //                    carNumber,

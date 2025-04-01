@@ -54,20 +54,3 @@ public class UserController {
         return ResponseDto.of(ResponseMessages.USER_PROFILE_UPDATED, updatedProfile);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

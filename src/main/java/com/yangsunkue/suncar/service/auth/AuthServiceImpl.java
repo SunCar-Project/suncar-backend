@@ -4,6 +4,7 @@ import com.yangsunkue.suncar.common.constant.ErrorMessages;
 import com.yangsunkue.suncar.dto.auth.request.LoginRequestDto;
 import com.yangsunkue.suncar.dto.auth.response.LoginResponseDto;
 import com.yangsunkue.suncar.dto.auth.request.SignUpRequestDto;
+import com.yangsunkue.suncar.dto.auth.response.SignUpResponseDto;
 import com.yangsunkue.suncar.entity.user.User;
 import com.yangsunkue.suncar.exception.DuplicateResourceException;
 import com.yangsunkue.suncar.exception.NotFoundException;
@@ -37,7 +38,7 @@ public class AuthServiceImpl implements AuthService {
      */
     @Override
     @Transactional
-    public User createUser(SignUpRequestDto dto) {
+    public SignUpResponseDto createUser(SignUpRequestDto dto) {
 
         // 중복 검사
         if (userRepository.existsByUserId(dto.getUserId())) {
@@ -52,11 +53,12 @@ public class AuthServiceImpl implements AuthService {
         String hashedPassword = passwordEncoder.encode(dto.getPassword());
         User user = userMapper.fromSignUpRequestDto(dto, hashedPassword);
 
-        // DB 에 저장
+        // DB 에 저장 및 DTO로 변환
         User saved = userRepository.save(user);
+        SignUpResponseDto userDto = userMapper.toSignUpResponseDto(saved);
 
         // 리턴
-        return saved;
+        return userDto;
     }
 
     /**
@@ -75,19 +77,11 @@ public class AuthServiceImpl implements AuthService {
         // 인증된 사용자 정보 가져오기
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
-        // TODO
-        // userdetail에서 userid, username get 해서 responsedto로 변환하도록 수정하기
-        // user객체 가져오는 로직 지우기
-
-        // User 객체 가져오기
-        User user = userRepository.findByUserId(userDetails.getUserId())
-                .orElseThrow(() -> new NotFoundException(ErrorMessages.USER_NOT_FOUND));
-
         // JWT 토큰 생성
         String token = jwtUtil.generateToken(userDetails);
 
         // responseDto로 변환
-        LoginResponseDto loginDto = userMapper.toLoginResponseDto(user, token);
+        LoginResponseDto loginDto = userMapper.toLoginResponseDtoFromUserDetails(userDetails, token);
 
         // 리턴
         return loginDto;

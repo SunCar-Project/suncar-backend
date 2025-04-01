@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * 차량 관련 Facade 서비스 입니다.
  */
-public interface CarManagementService {
+public interface CarFacadeService {
 
     /**
      * 판매중인 차량 목록을 조회합니다.
