@@ -2,15 +2,22 @@ package com.yangsunkue.suncar.controller.car;
 
 import com.yangsunkue.suncar.common.constant.ResponseMessages;
 import com.yangsunkue.suncar.dto.ResponseDto;
+import com.yangsunkue.suncar.dto.car.request.RegisterCarDummyRequestDto;
 import com.yangsunkue.suncar.dto.car.response.CarListResponseDto;
+import com.yangsunkue.suncar.dto.car.response.RegisterCarResponseDto;
+import com.yangsunkue.suncar.security.CustomUserDetails;
 import com.yangsunkue.suncar.service.facade.CarFacadeService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
 import java.util.List;
 
 /**
@@ -23,7 +30,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CarController {
 
-    @Qualifier("CarFacadeServiceImpl")
+    @Qualifier("CarFacadeServiceDummyImpl")
     private final CarFacadeService carFacadeService;
 
     /**
@@ -67,6 +74,23 @@ public class CarController {
     /**
      * 차량을 판매등록합니다. - 더미 데이터 입력용 컨트롤러 입니다.
      */
+    @PostMapping("/dummy")
+    @SecurityRequirement(name = "bearer-jwt")
+    @Operation(summary = "차량 판매 등록 - 더미 데이터 입력용")
+    public ResponseEntity<ResponseDto<RegisterCarResponseDto>> registerCarDummy(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @RequestBody RegisterCarDummyRequestDto dto
+    ) {
+        RegisterCarResponseDto registeredCar = carFacadeService.registerCar(dto, userDetails.getUserId());
+        ResponseDto<RegisterCarResponseDto> response = ResponseDto.of(ResponseMessages.CAR_REGISTERED, registeredCar);
+
+        /**
+         * TODO
+         * 등록된 차량 상세조회 페이지 경로 리턴해주기
+         */
+        return ResponseEntity.created(URI.create("/cars"))
+                .body(response);
+    }
 
 }
 

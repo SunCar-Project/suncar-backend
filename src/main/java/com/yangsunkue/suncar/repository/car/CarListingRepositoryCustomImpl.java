@@ -48,7 +48,7 @@ public class CarListingRepositoryCustomImpl extends Querydsl4RepositorySupport i
                     car.fuelType,
                     car.year,
                     car.month,
-                    model.brandName.stringValue(),
+                    model.brandName,
                     carMileage.distance,
                     carListingImage.imageUrl,
                     carListingImage.isPrimary
