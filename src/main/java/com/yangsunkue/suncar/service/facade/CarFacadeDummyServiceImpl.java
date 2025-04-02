@@ -16,9 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,7 +28,7 @@ import java.util.List;
 @Profile("dev")
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class CarFacadeServiceDummyImpl implements CarFacadeService {
+public class CarFacadeDummyServiceImpl implements CarFacadeDummyService {
 
     private final CarDummyDataGenerator carDummyDataGenerator;
     private final CarMapper carMapper;
@@ -58,19 +56,6 @@ public class CarFacadeServiceDummyImpl implements CarFacadeService {
         return carList;
     }
 
-    /**
-     * 차량을 판매등록합니다.
-     */
-    @Override
-    @Transactional
-    public RegisterCarResponseDto registerCar(
-            MultipartFile mainImage,
-            List<MultipartFile> additionalImages,
-            String carNumber,
-            BigDecimal price
-    ) {
-        return RegisterCarResponseDto.builder().build();
-    }
 
     /**
      * 차량을 판매등록합니다.

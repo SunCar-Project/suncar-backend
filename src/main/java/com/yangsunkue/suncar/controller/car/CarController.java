@@ -6,12 +6,11 @@ import com.yangsunkue.suncar.dto.car.request.RegisterCarDummyRequestDto;
 import com.yangsunkue.suncar.dto.car.response.CarListResponseDto;
 import com.yangsunkue.suncar.dto.car.response.RegisterCarResponseDto;
 import com.yangsunkue.suncar.security.CustomUserDetails;
-import com.yangsunkue.suncar.service.facade.CarFacadeService;
+import com.yangsunkue.suncar.service.facade.CarFacadeDummyService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -30,8 +29,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CarController {
 
-    @Qualifier("CarFacadeServiceDummyImpl")
-    private final CarFacadeService carFacadeService;
+    /**
+     * 더미 데이터 입력용 구현체
+     *
+     * TODO
+     * 카히스토리 API 및 S3 도입 후, CarFacadeService 로 교체
+     */
+    private final CarFacadeDummyService carFacadeDummyService;
 
     /**
      * 판매중인 차량 목록을 조회합니다.
@@ -39,7 +43,7 @@ public class CarController {
     @GetMapping("")
     @Operation(summary = "판매 차량 목록 조회")
     public ResponseDto<List<CarListResponseDto>> getCarList() {
-        List<CarListResponseDto> carList = carFacadeService.getCarList();
+        List<CarListResponseDto> carList = carFacadeDummyService.getCarList();
         return ResponseDto.of(ResponseMessages.CAR_LIST_RETRIEVED, carList);
     }
 
@@ -81,7 +85,7 @@ public class CarController {
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestBody RegisterCarDummyRequestDto dto
     ) {
-        RegisterCarResponseDto registeredCar = carFacadeService.registerCar(dto, userDetails.getUserId());
+        RegisterCarResponseDto registeredCar = carFacadeDummyService.registerCar(dto, userDetails.getUserId());
         ResponseDto<RegisterCarResponseDto> response = ResponseDto.of(ResponseMessages.CAR_REGISTERED, registeredCar);
 
         /**

@@ -1,12 +1,7 @@
 package com.yangsunkue.suncar.service.facade;
 
-import com.yangsunkue.suncar.common.constant.ErrorMessages;
-import com.yangsunkue.suncar.dto.car.request.RegisterCarDummyRequestDto;
 import com.yangsunkue.suncar.dto.car.response.CarListResponseDto;
 import com.yangsunkue.suncar.dto.car.response.RegisterCarResponseDto;
-import com.yangsunkue.suncar.exception.DummyDataNotSupportedException;
-import com.yangsunkue.suncar.repository.car.*;
-import com.yangsunkue.suncar.repository.user.UserRepository;
 import com.yangsunkue.suncar.service.car.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
@@ -66,14 +61,5 @@ public class CarFacadeServiceImpl implements CarFacadeService {
          */
 
         return RegisterCarResponseDto.builder().build();
-    }
-
-    /**
-     * 차량을 판매등록합니다. - 더미 데이터 입력을 위한 오버로딩 메서드 입니다.
-     */
-    @Override
-    @Transactional
-    public RegisterCarResponseDto registerCar(RegisterCarDummyRequestDto dto, String userId) {
-        throw new DummyDataNotSupportedException(ErrorMessages.DUMMY_DATA_NOT_SUPPORTED);
     }
 }
