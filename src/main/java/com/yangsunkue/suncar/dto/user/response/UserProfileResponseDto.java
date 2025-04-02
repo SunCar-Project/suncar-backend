@@ -16,24 +16,4 @@ public class UserProfileResponseDto {
     private String userName;
     private String phoneNumber;
     private UserRole role;
-
-    public static UserProfileResponseDto fromUserDetails(CustomUserDetails userDetails) {
-        return UserProfileResponseDto.builder()
-                .userId(userDetails.getUserId())
-                .email(userDetails.getEmail())
-                .userName(userDetails.getUsername())
-                .phoneNumber(userDetails.getPhoneNumber())
-                .role(userDetails.getRole())
-                .build();
-    }
-
-    public static UserProfileResponseDto fromUser(User user) {
-        return UserProfileResponseDto.builder()
-                .userId(user.getUserId())
-                .email(user.getEmail())
-                .userName(user.getUsername())
-                .phoneNumber(user.getPhoneNumber())
-                .role(user.getRole())
-                .build();
-    }
 }

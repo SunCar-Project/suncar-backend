@@ -1,7 +1,7 @@
 package com.yangsunkue.suncar.service.facade;
 
 import com.yangsunkue.suncar.common.enums.BrandName;
-import com.yangsunkue.suncar.dto.car.CarListResponseDto;
+import com.yangsunkue.suncar.dto.car.response.CarListResponseDto;
 import com.yangsunkue.suncar.dto.car.response.RegisterCarResponseDto;
 import com.yangsunkue.suncar.repository.car.CarListingRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class CarManagementServiceImpl implements CarManagementService {
+public class CarFacadeServiceImpl implements CarFacadeService {
 
     private final CarListingRepository carListingRepository;
 

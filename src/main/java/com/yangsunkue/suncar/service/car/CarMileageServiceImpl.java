@@ -2,6 +2,7 @@ package com.yangsunkue.suncar.service.car;
 
 import com.yangsunkue.suncar.dto.car.CarMileageDto;
 import com.yangsunkue.suncar.entity.car.CarMileage;
+import com.yangsunkue.suncar.mapper.CarMapper;
 import com.yangsunkue.suncar.repository.car.CarMileageRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 public class CarMileageServiceImpl implements CarMileageService {
 
     private final CarMileageRepository carMileageRepository;
+    private final CarMapper carMapper;
 
     /**
      * 차량 주행거리 정보를 다수 생성합니다.
@@ -29,7 +31,7 @@ public class CarMileageServiceImpl implements CarMileageService {
 
         /** 모든 DTO를 엔티티로 변환 */
         List<CarMileage> carMileages = dtos.stream()
-                .map(CarMileageDto::toEntity)
+                .map(carMapper::fromMileageDto)
                 .collect(Collectors.toList());
 
         /** DB 저장 및 리턴 */

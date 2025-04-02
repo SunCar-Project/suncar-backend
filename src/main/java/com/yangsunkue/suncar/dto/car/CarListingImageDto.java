@@ -11,16 +11,6 @@ import lombok.*;
 public class CarListingImageDto {
 
     private Long listingId;
-
     private String imageUrl;
-
     private Boolean isPrimary;
-
-    public static CarListingImage toEntity(CarListingImageDto dto) {
-        return CarListingImage.builder()
-                .carListing(CarListing.builder().id(dto.getListingId()).build())
-                .imageUrl(dto.getImageUrl())
-                .isPrimary(dto.getIsPrimary())
-                .build();
-    }
 }

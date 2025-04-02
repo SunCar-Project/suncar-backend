@@ -13,28 +13,10 @@ import java.math.BigDecimal;
 public class CarAccidentRepairDto {
 
     private Long accidentId;
-
     private String accidType;
-
     private String totalAmount;
-
     private BigDecimal partsCost;
-
     private BigDecimal laborCost;
-
     private BigDecimal paintingCost;
-
     private BigDecimal insuranceAmount;
-
-    public static CarAccidentRepair toEntity(CarAccidentRepairDto dto) {
-        return CarAccidentRepair.builder()
-                .carAccident(CarAccident.builder().id(dto.getAccidentId()).build())
-                .accidType(dto.getAccidType())
-                .totalAmount(dto.getTotalAmount())
-                .partsCost(dto.getPartsCost())
-                .laborCost(dto.getLaborCost())
-                .paintingCost(dto.getPaintingCost())
-                .insuranceAmount(dto.getInsuranceAmount())
-                .build();
-    }
 }

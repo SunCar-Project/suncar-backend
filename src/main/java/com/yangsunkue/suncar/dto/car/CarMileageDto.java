@@ -13,19 +13,7 @@ import java.time.LocalDate;
 public class CarMileageDto {
 
     private Long carId;
-
     private Integer distance;
-
     private String provider;
-
     private LocalDate recordDate;
-
-    public static CarMileage toEntity(CarMileageDto dto) {
-        return CarMileage.builder()
-                .car(Car.builder().id(dto.getCarId()).build())
-                .distance(dto.getDistance())
-                .provider(dto.getProvider())
-                .recordDate(dto.getRecordDate())
-                .build();
-    }
 }

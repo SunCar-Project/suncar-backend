@@ -5,6 +5,7 @@ import com.yangsunkue.suncar.dto.user.response.UserProfileResponseDto;
 import com.yangsunkue.suncar.dto.user.request.UserProfileUpdateRequestDto;
 import com.yangsunkue.suncar.entity.user.User;
 import com.yangsunkue.suncar.exception.NotFoundException;
+import com.yangsunkue.suncar.mapper.UserMapper;
 import com.yangsunkue.suncar.repository.user.UserRepository;
 import com.yangsunkue.suncar.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     /**
      * 현재 사용자 정보를 수정합니다.
@@ -34,7 +36,7 @@ public class UserServiceImpl implements UserService{
         currentUser.patch(dto);
 
         // dto 변환 및 리턴
-        UserProfileResponseDto responseDto = UserProfileResponseDto.fromUser(currentUser);
-        return responseDto;
+        UserProfileResponseDto profileDto = userMapper.toUserProfileResponseDto(currentUser);
+        return profileDto;
     }
 }

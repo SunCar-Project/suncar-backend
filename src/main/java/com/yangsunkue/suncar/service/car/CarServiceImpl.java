@@ -2,6 +2,7 @@ package com.yangsunkue.suncar.service.car;
 
 import com.yangsunkue.suncar.dto.car.CarDto;
 import com.yangsunkue.suncar.entity.car.Car;
+import com.yangsunkue.suncar.mapper.CarMapper;
 import com.yangsunkue.suncar.repository.car.CarRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class CarServiceImpl implements CarService {
 
     private final CarRepository carRepository;
+    private final CarMapper carMapper;
 
     /**
      * 차량 정보를 생성합니다.
@@ -23,7 +25,7 @@ public class CarServiceImpl implements CarService {
     @Override
     @Transactional
     public Car createCar(CarDto dto) {
-        Car car = CarDto.toEntity(dto);
+        Car car = carMapper.fromCarDto(dto);
         Car saved = carRepository.save(car);
 
         return saved;

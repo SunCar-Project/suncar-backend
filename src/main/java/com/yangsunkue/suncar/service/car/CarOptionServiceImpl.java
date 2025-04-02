@@ -2,6 +2,7 @@ package com.yangsunkue.suncar.service.car;
 
 import com.yangsunkue.suncar.dto.car.CarOptionDto;
 import com.yangsunkue.suncar.entity.car.CarOption;
+import com.yangsunkue.suncar.mapper.CarMapper;
 import com.yangsunkue.suncar.repository.car.CarOptionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 public class CarOptionServiceImpl implements CarOptionService {
 
     private final CarOptionRepository carOptionRepository;
+    private final CarMapper carMapper;
 
     @Override
     @Transactional
@@ -29,7 +31,7 @@ public class CarOptionServiceImpl implements CarOptionService {
 
         /** 모든 DTO를 엔티티로 변환 */
         List<CarOption> carOptions = dtos.stream()
-                .map(CarOptionDto::toEntity)
+                .map(carMapper::fromOptionDto)
                 .collect(Collectors.toList());
 
         /** DB 저장 및 리턴 */

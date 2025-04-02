@@ -3,7 +3,7 @@ package com.yangsunkue.suncar.repository.car;
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.yangsunkue.suncar.dto.car.CarListResponseDto;
+import com.yangsunkue.suncar.dto.car.response.CarListResponseDto;
 import com.yangsunkue.suncar.entity.car.*;
 import com.yangsunkue.suncar.repository.support.Querydsl4RepositorySupport;
 import org.springframework.stereotype.Repository;

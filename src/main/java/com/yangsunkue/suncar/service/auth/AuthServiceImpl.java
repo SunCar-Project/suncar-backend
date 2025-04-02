@@ -4,9 +4,11 @@ import com.yangsunkue.suncar.common.constant.ErrorMessages;
 import com.yangsunkue.suncar.dto.auth.request.LoginRequestDto;
 import com.yangsunkue.suncar.dto.auth.response.LoginResponseDto;
 import com.yangsunkue.suncar.dto.auth.request.SignUpRequestDto;
+import com.yangsunkue.suncar.dto.auth.response.SignUpResponseDto;
 import com.yangsunkue.suncar.entity.user.User;
 import com.yangsunkue.suncar.exception.DuplicateResourceException;
 import com.yangsunkue.suncar.exception.NotFoundException;
+import com.yangsunkue.suncar.mapper.UserMapper;
 import com.yangsunkue.suncar.repository.user.UserRepository;
 import com.yangsunkue.suncar.security.CustomUserDetails;
 import com.yangsunkue.suncar.security.JwtUtil;
@@ -29,13 +31,14 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
+    private final UserMapper userMapper;
 
     /**
      * 일반 회원가입을 진행합니다.
      */
     @Override
     @Transactional
-    public User createUser(SignUpRequestDto dto) {
+    public SignUpResponseDto createUser(SignUpRequestDto dto) {
 
         // 중복 검사
         if (userRepository.existsByUserId(dto.getUserId())) {
@@ -48,13 +51,14 @@ public class AuthServiceImpl implements AuthService {
 
         // 패스워드 해시 및 엔티티로 변환
         String hashedPassword = passwordEncoder.encode(dto.getPassword());
-        User userEntity = SignUpRequestDto.toEntity(dto, hashedPassword);
+        User user = userMapper.fromSignUpRequestDto(dto, hashedPassword);
 
-        // DB 에 저장
-        User saved = userRepository.save(userEntity);
+        // DB 에 저장 및 DTO로 변환
+        User saved = userRepository.save(user);
+        SignUpResponseDto userDto = userMapper.toSignUpResponseDto(saved);
 
         // 리턴
-        return saved;
+        return userDto;
     }
 
     /**
@@ -73,21 +77,13 @@ public class AuthServiceImpl implements AuthService {
         // 인증된 사용자 정보 가져오기
         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
 
-        // TODO
-        // userdetail에서 userid, username get 해서 responsedto로 변환하도록 수정하기
-        // user객체 가져오는 로직 지우기
-
-        // User 객체 가져오기
-        User user = userRepository.findByUserId(userDetails.getUserId())
-                .orElseThrow(() -> new NotFoundException(ErrorMessages.USER_NOT_FOUND));
-
         // JWT 토큰 생성
         String token = jwtUtil.generateToken(userDetails);
 
         // responseDto로 변환
-        LoginResponseDto responseDto = LoginResponseDto.fromUserAndToken(user, token);
+        LoginResponseDto loginDto = userMapper.toLoginResponseDtoFromUserDetails(userDetails, token);
 
         // 리턴
-        return responseDto;
+        return loginDto;
     }
 }
