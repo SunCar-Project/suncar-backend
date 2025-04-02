@@ -33,8 +33,10 @@ public class CarListingImageServiceImpl implements CarListingImageService {
     @Transactional
     public CarListingImage createMainImage(CarListingImageDto dto) {
 
+        System.out.println(dto.getListingId());
+
         // 이미 메인 이미지가 있는지 확인
-        Optional<CarListingImage> existingMainImage = carListingImageRepository.findByIdAndIsPrimaryTrue(dto.getListingId());
+        Optional<CarListingImage> existingMainImage = carListingImageRepository.findByCarListingIdAndIsPrimaryTrue(dto.getListingId());
         existingMainImage.ifPresent(image -> {
             throw new DuplicateResourceException(ErrorMessages.DUPLICATE_MAIN_IMAGE);
         });

@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class ModelServiceImpl {
+public class ModelServiceImpl implements ModelService {
 
     private final ModelRepository modelRepository;
     private final CarMapper carMapper;

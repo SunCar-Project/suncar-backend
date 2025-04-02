@@ -1,10 +1,15 @@
 package com.yangsunkue.suncar.service.facade;
 
-import com.yangsunkue.suncar.common.enums.BrandName;
+import com.yangsunkue.suncar.common.constant.ErrorMessages;
+import com.yangsunkue.suncar.dto.car.request.RegisterCarDummyRequestDto;
 import com.yangsunkue.suncar.dto.car.response.CarListResponseDto;
 import com.yangsunkue.suncar.dto.car.response.RegisterCarResponseDto;
-import com.yangsunkue.suncar.repository.car.CarListingRepository;
+import com.yangsunkue.suncar.exception.DummyDataNotSupportedException;
+import com.yangsunkue.suncar.repository.car.*;
+import com.yangsunkue.suncar.repository.user.UserRepository;
+import com.yangsunkue.suncar.service.car.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,25 +21,19 @@ import java.util.List;
  * 차량 관련 Facade 서비스 구현체 입니다.
  */
 @Service
+@Profile("!dev")
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class CarFacadeServiceImpl implements CarFacadeService {
 
-    private final CarListingRepository carListingRepository;
+    private final CarListingService carListingService;
 
     /**
      * 판매중인 차량 목록을 조회합니다.
      */
     @Override
     public List<CarListResponseDto> getCarList() {
-        List<CarListResponseDto> carList = carListingRepository.getCarList();
-
-        /** BrandName enum을 value로 변경 */
-        carList.forEach(dto -> {
-            BrandName brandNameEnum = BrandName.valueOf(dto.getBrandName());
-            dto.setBrandName(brandNameEnum.getValue());
-        });
-
+        List<CarListResponseDto> carList = carListingService.getCarList();
         return carList;
     }
 
@@ -71,28 +70,10 @@ public class CarFacadeServiceImpl implements CarFacadeService {
 
     /**
      * 차량을 판매등록합니다. - 더미 데이터 입력을 위한 오버로딩 메서드 입니다.
-     *
-     * @param mainImage - 메인 이미지
-     * @param additionalImages - 나머지 이미지들
-     * @param carNumber - 차량번호
-     * @param price - 가격
-     * @return
      */
+    @Override
     @Transactional
-    public RegisterCarResponseDto registerCar(
-            String mainImage,
-            List<String> additionalImages,
-            String carNumber,
-            BigDecimal price
-    ) {
-
-        /**
-         * 1. 각 엔티티별 서비스 함수 호출 - 더미 데이터 입력
-         * 2. 입력된 데이터들 dto로 제작 ( dto 제작 메서드는 dto클래스 내에 만들기 )
-         * 3. 리턴
-         */
-
-
-        return RegisterCarResponseDto.builder().build();
+    public RegisterCarResponseDto registerCar(RegisterCarDummyRequestDto dto, String userId) {
+        throw new DummyDataNotSupportedException(ErrorMessages.DUMMY_DATA_NOT_SUPPORTED);
     }
 }
