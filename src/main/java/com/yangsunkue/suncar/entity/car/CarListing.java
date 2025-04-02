@@ -4,10 +4,7 @@ import com.yangsunkue.suncar.common.enums.CarListingStatus;
 import com.yangsunkue.suncar.entity.BaseEntity;
 import com.yangsunkue.suncar.entity.user.User;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 
 import java.math.BigDecimal;
@@ -21,6 +18,7 @@ import java.math.BigDecimal;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
+@Getter
 public class CarListing extends BaseEntity {
 
     @Id

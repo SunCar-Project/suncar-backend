@@ -1,7 +1,9 @@
 package com.yangsunkue.suncar.service.facade;
 
+import com.yangsunkue.suncar.dto.car.request.RegisterCarDummyRequestDto;
 import com.yangsunkue.suncar.dto.car.response.CarListResponseDto;
 import com.yangsunkue.suncar.dto.car.response.RegisterCarResponseDto;
+import com.yangsunkue.suncar.security.CustomUserDetails;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
@@ -27,4 +29,9 @@ public interface CarFacadeService {
             String carNumber,
             BigDecimal price
     );
+
+    /**
+     * 차량을 판매등록합니다. - 더미 데이터 입력을 위한 오버로딩 메서드 입니다.
+     */
+    RegisterCarResponseDto registerCar(RegisterCarDummyRequestDto dto, String userId);
 }

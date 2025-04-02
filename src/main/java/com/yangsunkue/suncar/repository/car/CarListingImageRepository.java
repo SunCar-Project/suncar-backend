@@ -8,5 +8,5 @@ import java.util.Optional;
 public interface CarListingImageRepository extends JpaRepository<CarListingImage, Long> {
 
     /** 특정 판매글에 메인 이미지가 있는지 조회 */
-    Optional<CarListingImage> findByIdAndIsPrimaryTrue(Long id);
+    Optional<CarListingImage> findByCarListingIdAndIsPrimaryTrue(Long id);
 }
