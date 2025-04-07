@@ -1,7 +1,5 @@
 package com.yangsunkue.suncar.dto.car;
 
-import com.yangsunkue.suncar.entity.car.Car;
-import com.yangsunkue.suncar.entity.car.Model;
 import lombok.*;
 
 
