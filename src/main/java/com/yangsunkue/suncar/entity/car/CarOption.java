@@ -3,10 +3,7 @@ package com.yangsunkue.suncar.entity.car;
 import com.yangsunkue.suncar.common.enums.OptionInstallStatus;
 import com.yangsunkue.suncar.entity.BaseEntity;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 
 /**
@@ -18,6 +15,7 @@ import org.hibernate.annotations.SQLDelete;
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder
+@Getter
 public class CarOption extends BaseEntity {
 
     @Id

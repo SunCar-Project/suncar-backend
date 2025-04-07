@@ -16,5 +16,5 @@ public class ErrorMessages {
     public static final String DUPLICATE_MAIN_IMAGE = "이미 메인 이미지가 존재합니다.";
     public static final String IMAGE_NOT_PRIMARY = "메인 이미지 생성 요청에는 isPrimary가 true 여야 합니다.";
     public static final String PRIMARY_IMAGES_NOT_ALLOWED = "일반 이미지 생성 요청에는 isPrimary가 false 여야 합니다.";
-    public static final String DUMMY_DATA_NOT_SUPPORTED = "프로덕션 환경에서는 더미 데이터 생성이 지원되지 않습니다.";
+    public static final String CAR_LISTING_NOT_FOUND = "판매 등록된 차량 정보를 찾을 수 없습니다.";
 }

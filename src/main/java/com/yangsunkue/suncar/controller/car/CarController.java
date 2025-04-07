@@ -3,6 +3,7 @@ package com.yangsunkue.suncar.controller.car;
 import com.yangsunkue.suncar.common.constant.ResponseMessages;
 import com.yangsunkue.suncar.dto.ResponseDto;
 import com.yangsunkue.suncar.dto.car.request.RegisterCarDummyRequestDto;
+import com.yangsunkue.suncar.dto.car.response.CarDetailResponseDto;
 import com.yangsunkue.suncar.dto.car.response.CarListResponseDto;
 import com.yangsunkue.suncar.dto.car.response.RegisterCarResponseDto;
 import com.yangsunkue.suncar.security.CustomUserDetails;
@@ -48,7 +49,7 @@ public class CarController {
     }
 
     /**
-     * 차량을 판매등록합니다.
+     * 차량을 판매등록합니다. - 배포용
      */
 //    @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 //    @SecurityRequirement(name = "bearer-jwt")
@@ -88,28 +89,17 @@ public class CarController {
         RegisterCarResponseDto registeredCar = carFacadeDummyService.registerCar(dto, userDetails.getUserId());
         ResponseDto<RegisterCarResponseDto> response = ResponseDto.of(ResponseMessages.CAR_REGISTERED, registeredCar);
 
-        /**
-         * TODO
-         * 등록된 차량 상세조회 페이지 경로 리턴해주기
-         */
-        return ResponseEntity.created(URI.create("/cars"))
+        return ResponseEntity.created(URI.create("/cars/" + registeredCar.getListingId()))
                 .body(response);
     }
 
+    /**
+     * 판매 차량 상세정보를 조회합니다.
+     */
+    @GetMapping("/{listingId}")
+    @Operation(summary = "판매 차량 상세정보 조회")
+    public ResponseDto<CarDetailResponseDto> getCarDetail(@PathVariable Long listingId) {
+        CarDetailResponseDto carDetail = carFacadeDummyService.getCarDetail(listingId);
+        return ResponseDto.of(ResponseMessages.CAR_DETAIL_RETRIEVED, carDetail);
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

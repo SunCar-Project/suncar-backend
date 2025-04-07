@@ -19,4 +19,5 @@ public class ResponseMessages {
      */
     public static final String CAR_LIST_RETRIEVED = "차량 목록을 조회하였습니다.";
     public static final String CAR_REGISTERED = "차량을 판매등록하였습니다.";
+    public static final String CAR_DETAIL_RETRIEVED = "판매 차량 상세정보를 조회하였습니다.";
 }
