@@ -3,12 +3,15 @@ package com.yangsunkue.suncar.service.facade;
 import com.yangsunkue.suncar.common.constant.ErrorMessages;
 import com.yangsunkue.suncar.dto.car.*;
 import com.yangsunkue.suncar.dto.car.request.RegisterCarDummyRequestDto;
+import com.yangsunkue.suncar.dto.car.response.CarDetailResponseDto;
 import com.yangsunkue.suncar.dto.car.response.CarListResponseDto;
 import com.yangsunkue.suncar.dto.car.response.RegisterCarResponseDto;
+import com.yangsunkue.suncar.dto.repository.CarDetailFetchResult;
 import com.yangsunkue.suncar.entity.car.*;
 import com.yangsunkue.suncar.entity.user.User;
 import com.yangsunkue.suncar.exception.NotFoundException;
 import com.yangsunkue.suncar.mapper.CarMapper;
+import com.yangsunkue.suncar.repository.car.CarListingRepository;
 import com.yangsunkue.suncar.repository.user.UserRepository;
 import com.yangsunkue.suncar.service.car.*;
 import com.yangsunkue.suncar.util.CarDummyDataGenerator;
@@ -16,9 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,14 +31,15 @@ import java.util.List;
 @Profile("dev")
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class CarFacadeServiceDummyImpl implements CarFacadeService {
+public class CarFacadeDummyServiceImpl implements CarFacadeDummyService {
 
     private final CarDummyDataGenerator carDummyDataGenerator;
     private final CarMapper carMapper;
 
     private final UserRepository userRepository;
+    private final CarListingRepository carListingRepository;
 
-    /** Car 관련 Repository */
+    /** Car 관련 서비스 */
     private final ModelService modelService;
     private final CarService carService;
     private final CarMileageService carMileageService;
@@ -59,31 +61,48 @@ public class CarFacadeServiceDummyImpl implements CarFacadeService {
     }
 
     /**
-     * 차량을 판매등록합니다.
+     * 판매 차량 상세정보를 조회합니다.
+     * QueryDSL을 사용하여 데이터를 가져온 후, 서비스에서 매퍼를 통해 DTO로 변환됩니다.
+     *
+     * @param listingId 차량 판매등록 ID
      */
     @Override
-    @Transactional
-    public RegisterCarResponseDto registerCar(
-            MultipartFile mainImage,
-            List<MultipartFile> additionalImages,
-            String carNumber,
-            BigDecimal price
-    ) {
-        return RegisterCarResponseDto.builder().build();
+    public CarDetailResponseDto getCarDetail(Long listingId) {
+
+        /** 차량 상세정보 엔티티들 조회 */
+        CarDetailFetchResult data = carListingRepository.getCarDetailById(listingId)
+                .orElseThrow(() -> new NotFoundException(ErrorMessages.CAR_LISTING_NOT_FOUND));
+
+        /** DTO로 변환 */
+        CarDetailResponseDto carDetail = carMapper.toCarDetailResponseDto(data.carListing());
+
+        /** 나머지 데이터 매핑 */
+        processImages(data.images(), carDetail);
+        carDetail.setAccidents(carMapper.toCarAccidentWithRepairsDtos(data.accidents(), data.repairsByAccidentId()));
+        carDetail.setMileages(carMapper.toCarMileageDtos(data.mileages()));
+        carDetail.setOptions(carMapper.toCarOptionDtos(data.options()));
+        carDetail.setOwnershipChanges(carMapper.toCarOwnershipChangeDtos(data.ownershipChanges()));
+        if (data.usage() != null) {
+            carDetail.setUsage(carMapper.toCarUsageDto(data.usage()));
+        }
+
+        return carDetail;
     }
 
     /**
      * 차량을 판매등록합니다.
      * - 더미 데이터를 이용합니다.
+     *
+     * @param userId - 판매자 아이디
      */
     @Override
     @Transactional
     public RegisterCarResponseDto registerCar(RegisterCarDummyRequestDto dto, String userId) {
+
         /**
-         * 1. 각 엔티티별 서비스 함수 호출 - 더미 데이터 입력
-         * 2. 입력된 데이터들 dto로 제작 ( dto 제작 메서드는 dto클래스 내에 만들기 )
-         * 3. 리턴
+         * 각 엔티티마다 더미 데이터 생성 후 DB에 저장
          */
+
         /** Model */
         ModelDto modelDto = carDummyDataGenerator.generateModelDto();
         Model model = modelService.createModel(modelDto);
@@ -92,37 +111,9 @@ public class CarFacadeServiceDummyImpl implements CarFacadeService {
         CarDto carDto = carDummyDataGenerator.generateCarDto(model.getId(), dto.getCarNumber());
         Car car = carService.createCar(carDto);
 
-        /** CarMileage */
-        List<CarMileageDto> mileageDtos = carDummyDataGenerator.generateCarMileageDtos(car.getId());
-        List<CarMileage> mileages = carMileageService.createMileages(mileageDtos);
-
         /** CarAccident */
         List<CarAccidentDto> accidentDtos = carDummyDataGenerator.generateCarAccidentDtos(car.getId());
         List<CarAccident> accidents = carAccidentService.createAccidents(accidentDtos);
-
-        /**
-         * CarAccidentRepair
-         * - Accident.id를 추출해 인자로 전달
-         */
-        List<Long> accidentIds = new ArrayList<>();
-        for (CarAccident accident : accidents) {
-            accidentIds.add(accident.getId());
-        }
-
-        List<CarAccidentRepairDto> accidentRepairDtos = carDummyDataGenerator.generateCarAccidentRepairDtos(accidentIds);
-        List<CarAccidentRepair> accidentRepairs = carAccidentRepairService.createAccidentRepairs(accidentRepairDtos);
-
-        /** CarOwnershipChange */
-        List<CarOwnershipChangeDto> ownershipChangeDtos = carDummyDataGenerator.generateCarOwnershipChangeDtos(car.getId());
-        List<CarOwnershipChange> ownershipChanges = carOwnershipChangeService.createChanges(ownershipChangeDtos);
-
-        /** CarUsage */
-        List<CarUsageDto> usageDtos = carDummyDataGenerator.generateCarUsageDtos(car.getId());
-        List<CarUsage> usages = carUsageService.createUsages(usageDtos);
-
-        /** CarOption */
-        List<CarOptionDto> optionDtos = carDummyDataGenerator.generateCarOptionDtos(car.getId());
-        List<CarOption> options = carOptionService.createOptions(optionDtos);
 
         /**
          * CarListing
@@ -136,18 +127,65 @@ public class CarFacadeServiceDummyImpl implements CarFacadeService {
         CarListing listing = carListingService.createListing(listingDto);
 
         /**
-         * CarListingImage
+         * CarAccidentRepair
+         * - Accident.id를 추출해 인자로 전달
          */
+        List<Long> accidentIds = new ArrayList<>();
+        for (CarAccident accident : accidents) {
+            accidentIds.add(accident.getId());
+        }
+
+        List<CarAccidentRepairDto> accidentRepairDtos = carDummyDataGenerator.generateCarAccidentRepairDtos(accidentIds);
+        carAccidentRepairService.createAccidentRepairs(accidentRepairDtos);
+
+        /** CarMileage */
+        List<CarMileageDto> mileageDtos = carDummyDataGenerator.generateCarMileageDtos(car.getId());
+        carMileageService.createMileages(mileageDtos);
+
+        /** CarOwnershipChange */
+        List<CarOwnershipChangeDto> ownershipChangeDtos = carDummyDataGenerator.generateCarOwnershipChangeDtos(car.getId());
+        carOwnershipChangeService.createChanges(ownershipChangeDtos);
+
+        /** CarUsage */
+        CarUsageDto usageDto = carDummyDataGenerator.generateCarUsageDto(car.getId());
+        carUsageService.createUsage(usageDto);
+
+        /** CarOption */
+        List<CarOptionDto> optionDtos = carDummyDataGenerator.generateCarOptionDtos(car.getId());
+        carOptionService.createOptions(optionDtos);
+
+        /** CarListingImage */
         CarListingImageDto mainImageDto = carDummyDataGenerator.generateCarListingImageDtoFromMainImage(listing.getId(), dto.getMainImage());
-        CarListingImage mainImage = carListingImageService.createMainImage(mainImageDto);
+        carListingImageService.createMainImage(mainImageDto);
 
         List<CarListingImageDto> additionalImageDtos = carDummyDataGenerator.generateCarListingDtosFromAdditionalImages(listing.getId(), dto.getAdditionalImages());
-        List<CarListingImage> additionalImages = carListingImageService.createImages(additionalImageDtos);
+        carListingImageService.createImages(additionalImageDtos);
 
         /**
          * 결과를 dto로 만든 후 리턴
          */
         RegisterCarResponseDto registerCar = carMapper.toRegisterCarResponseDto(listing, car, model);
         return registerCar;
+    }
+
+    /**
+     * 이미지 데이터를 받아 메인/일반 이미지로 구분하여 dto에 담습니다.
+     */
+    private void processImages(List<CarListingImage> images, CarDetailResponseDto dto) {
+
+        String mainImageUrl = null;
+        List<String> additionalImageUrls = new ArrayList<>();
+
+        for (CarListingImage image : images) {
+            if (image.getIsPrimary()) {
+                mainImageUrl = image.getImageUrl();
+            }
+            else {
+                additionalImageUrls.add(image.getImageUrl());
+            }
+        }
+
+        dto.setMainImageUrl(mainImageUrl);
+        dto.setAdditionalImageUrls(additionalImageUrls);
     }
 }

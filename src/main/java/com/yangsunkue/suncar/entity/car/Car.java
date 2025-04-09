@@ -74,25 +74,3 @@ public class Car extends BaseEntity {
     @Column(name = "max_price")
     private BigDecimal maxPrice;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

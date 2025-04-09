@@ -24,20 +24,14 @@ public class CarUsageServiceImpl implements CarUsageService {
     private final CarMapper carMapper;
 
     /**
-     * 차량 사용이력 정보를 다수 생성합니다.
+     * 차량 사용이력 정보를 생성합니다.
      */
     @Override
     @Transactional
-    public List<CarUsage> createUsages(List<CarUsageDto> dtos) {
+    public CarUsage createUsage(CarUsageDto dto) {
 
-        /** 모든 DTO를 엔티티로 변환 */
-        List<CarUsage> carUsages = dtos.stream()
-                .map(carMapper::fromUsageDto)
-                .collect(Collectors.toList());
-
-        /** DB에 저장 후 리턴 */
-        List<CarUsage> savedUsages = carUsageRepository.saveAll(carUsages);
-
-        return savedUsages;
+        CarUsage usage = carMapper.fromUsageDto(dto);
+        CarUsage saved = carUsageRepository.save(usage);
+        return saved;
     }
 }

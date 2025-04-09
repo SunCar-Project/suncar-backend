@@ -3,15 +3,15 @@ package com.yangsunkue.suncar.controller.car;
 import com.yangsunkue.suncar.common.constant.ResponseMessages;
 import com.yangsunkue.suncar.dto.ResponseDto;
 import com.yangsunkue.suncar.dto.car.request.RegisterCarDummyRequestDto;
+import com.yangsunkue.suncar.dto.car.response.CarDetailResponseDto;
 import com.yangsunkue.suncar.dto.car.response.CarListResponseDto;
 import com.yangsunkue.suncar.dto.car.response.RegisterCarResponseDto;
 import com.yangsunkue.suncar.security.CustomUserDetails;
-import com.yangsunkue.suncar.service.facade.CarFacadeService;
+import com.yangsunkue.suncar.service.facade.CarFacadeDummyService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -30,8 +30,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CarController {
 
-    @Qualifier("CarFacadeServiceDummyImpl")
-    private final CarFacadeService carFacadeService;
+    /**
+     * 더미 데이터 입력용 구현체
+     *
+     * TODO
+     * 카히스토리 API 및 S3 도입 후, CarFacadeService 로 교체
+     */
+    private final CarFacadeDummyService carFacadeDummyService;
 
     /**
      * 판매중인 차량 목록을 조회합니다.
@@ -39,12 +44,12 @@ public class CarController {
     @GetMapping("")
     @Operation(summary = "판매 차량 목록 조회")
     public ResponseDto<List<CarListResponseDto>> getCarList() {
-        List<CarListResponseDto> carList = carFacadeService.getCarList();
+        List<CarListResponseDto> carList = carFacadeDummyService.getCarList();
         return ResponseDto.of(ResponseMessages.CAR_LIST_RETRIEVED, carList);
     }
 
     /**
-     * 차량을 판매등록합니다.
+     * 차량을 판매등록합니다. - 배포용
      */
 //    @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 //    @SecurityRequirement(name = "bearer-jwt")
@@ -81,31 +86,20 @@ public class CarController {
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestBody RegisterCarDummyRequestDto dto
     ) {
-        RegisterCarResponseDto registeredCar = carFacadeService.registerCar(dto, userDetails.getUserId());
+        RegisterCarResponseDto registeredCar = carFacadeDummyService.registerCar(dto, userDetails.getUserId());
         ResponseDto<RegisterCarResponseDto> response = ResponseDto.of(ResponseMessages.CAR_REGISTERED, registeredCar);
 
-        /**
-         * TODO
-         * 등록된 차량 상세조회 페이지 경로 리턴해주기
-         */
-        return ResponseEntity.created(URI.create("/cars"))
+        return ResponseEntity.created(URI.create("/cars/" + registeredCar.getListingId()))
                 .body(response);
     }
 
+    /**
+     * 판매 차량 상세정보를 조회합니다.
+     */
+    @GetMapping("/{listingId}")
+    @Operation(summary = "판매 차량 상세정보 조회")
+    public ResponseDto<CarDetailResponseDto> getCarDetail(@PathVariable Long listingId) {
+        CarDetailResponseDto carDetail = carFacadeDummyService.getCarDetail(listingId);
+        return ResponseDto.of(ResponseMessages.CAR_DETAIL_RETRIEVED, carDetail);
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -4,15 +4,15 @@ import com.querydsl.core.Tuple;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.yangsunkue.suncar.dto.car.response.CarListResponseDto;
+import com.yangsunkue.suncar.dto.repository.CarDetailFetchResult;
 import com.yangsunkue.suncar.entity.car.*;
+import com.yangsunkue.suncar.entity.user.QUser;
 import com.yangsunkue.suncar.repository.support.Querydsl4RepositorySupport;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * CarListing Custom Repository 구현체입니다.
@@ -120,6 +120,106 @@ public class CarListingRepositoryCustomImpl extends Querydsl4RepositorySupport i
         /** 만들어진 dto 리스트를 반환 */
         return new ArrayList<>(dtoMap.values());
     }
+
+    /**
+     * 차량 상세정보를 조회합니다.
+     */
+    @Override
+    public Optional<CarDetailFetchResult> getCarDetailById(Long listingId) {
+
+        QUser user = QUser.user;
+        QCar car = QCar.car;
+        QCarAccident carAccident = QCarAccident.carAccident;
+        QCarAccidentRepair carAccidentRepair = QCarAccidentRepair.carAccidentRepair;
+        QCarListing carListing = QCarListing.carListing;
+        QCarListingImage carListingImage = QCarListingImage.carListingImage;
+        QCarMileage carMileage = QCarMileage.carMileage;
+        QCarOption carOption = QCarOption.carOption;
+        QCarOwnershipChange carOwnershipChange = QCarOwnershipChange.carOwnershipChange;
+        QCarUsage carUsage = QCarUsage.carUsage;
+        QModel model = QModel.model;
+
+        /** 1. 기본 차량 정보 조회 (CarListing, Car, Model, User) */
+        CarListing result = getQueryFactory()
+                .selectFrom(carListing)
+                .join(carListing.car, car).fetchJoin()
+                .join(car.model, model).fetchJoin()
+                .join(carListing.user, user).fetchJoin()
+                .where(carListing.id.eq(listingId))
+                .fetchOne();
+
+        if (result == null) {
+            return Optional.empty();
+        }
+        Long carId = result.getCar().getId();
+
+
+        /** 2. 모든 이미지 정보 조회 */
+        List<CarListingImage> images = getQueryFactory()
+                .selectFrom(carListingImage)
+                .where(carListingImage.carListing.id.eq(listingId))
+                .fetch();
+
+        /** 3. 사고 정보와 수리 정보 조회 */
+        // 사고이력 전부 가져오기
+        List<CarAccident> accidents = getQueryFactory()
+                .selectFrom(carAccident)
+                .where(carAccident.car.id.eq(carId))
+                .fetch();
+
+        // 사고이력 id 리스트 생성
+        List<Long> accidentIds = accidents.stream()
+                .map(CarAccident::getId)
+                .collect(Collectors.toList());
+
+        // 사고이력들의 수리정보 전부 조회
+        List<CarAccidentRepair> repairs = accidentIds.isEmpty()
+                ? List.of()
+                : getQueryFactory()
+                    .selectFrom(carAccidentRepair)
+                    .where(carAccidentRepair.carAccident.id.in(accidentIds))
+                    .fetch();
+
+        // 수리정보를 사고이력 id 기준으로 그룹핑 리스트화
+        Map<Long, List<CarAccidentRepair>> repairsByAccidentId = repairs.stream()
+                .collect(Collectors.groupingBy(repair -> repair.getCarAccident().getId()));
+
+        /** 4. 주행거리 조회 */
+        List<CarMileage> mileages = getQueryFactory()
+                .selectFrom(carMileage)
+                .where(carMileage.car.id.eq(carId))
+                .orderBy(carMileage.recordDate.desc())
+                .fetch();
+
+        /** 5. 옵션/안전장치 조회 */
+        List<CarOption> options = getQueryFactory()
+                .selectFrom(carOption)
+                .where(carOption.car.id.eq(carId))
+                .fetch();
+
+        /** 6. 소유자/번호 변경이력 조회 */
+        List<CarOwnershipChange> ownershipChanges = getQueryFactory()
+                .selectFrom(carOwnershipChange)
+                .where(carOwnershipChange.car.id.eq(carId))
+                .orderBy(carOwnershipChange.changeDate.desc())
+                .fetch();
+
+        /** 7. 사용이력 조회 */
+        CarUsage usage = getQueryFactory()
+                .selectFrom(carUsage)
+                .where(carUsage.car.id.eq(carId))
+                .fetchOne();
+
+        /** 결과 엔티티 리턴 */
+        return Optional.of(new CarDetailFetchResult(
+                result,
+                images,
+                accidents,
+                repairsByAccidentId,
+                mileages,
+                options,
+                ownershipChanges,
+                usage
+        ));
+    }
 }
-
-

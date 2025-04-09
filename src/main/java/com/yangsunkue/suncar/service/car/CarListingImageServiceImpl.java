@@ -33,8 +33,6 @@ public class CarListingImageServiceImpl implements CarListingImageService {
     @Transactional
     public CarListingImage createMainImage(CarListingImageDto dto) {
 
-        System.out.println(dto.getListingId());
-
         // 이미 메인 이미지가 있는지 확인
         Optional<CarListingImage> existingMainImage = carListingImageRepository.findByCarListingIdAndIsPrimaryTrue(dto.getListingId());
         existingMainImage.ifPresent(image -> {
@@ -52,7 +50,6 @@ public class CarListingImageServiceImpl implements CarListingImageService {
 
         return saved;
     }
-
 
     /**
      * 차량 판매등록 이미지를 다수 생성합니다.
@@ -78,7 +75,6 @@ public class CarListingImageServiceImpl implements CarListingImageService {
 
         return savedImages;
     }
-
 
     /**
      * TODO

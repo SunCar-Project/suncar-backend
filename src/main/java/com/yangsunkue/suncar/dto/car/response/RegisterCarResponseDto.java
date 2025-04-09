@@ -1,6 +1,5 @@
 package com.yangsunkue.suncar.dto.car.response;
 
-
 import lombok.Builder;
 import lombok.Getter;
 

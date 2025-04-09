@@ -1,7 +1,6 @@
 package com.yangsunkue.suncar.dto.car;
 
-import com.yangsunkue.suncar.entity.car.Car;
-import com.yangsunkue.suncar.entity.car.CarUsage;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
@@ -10,6 +9,7 @@ import lombok.*;
 @Getter
 public class CarUsageDto {
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Long carId;
     private String rentalHistory;
     private String businessHistory;

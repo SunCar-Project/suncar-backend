@@ -1,7 +1,6 @@
 package com.yangsunkue.suncar.dto.car;
 
-import com.yangsunkue.suncar.entity.car.CarAccident;
-import com.yangsunkue.suncar.entity.car.CarAccidentRepair;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -12,6 +11,7 @@ import java.math.BigDecimal;
 @Getter
 public class CarAccidentRepairDto {
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Long accidentId;
     private String accidType;
     private String totalAmount;

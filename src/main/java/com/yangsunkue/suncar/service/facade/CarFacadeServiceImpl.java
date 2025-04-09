@@ -1,12 +1,14 @@
 package com.yangsunkue.suncar.service.facade;
 
 import com.yangsunkue.suncar.common.constant.ErrorMessages;
-import com.yangsunkue.suncar.dto.car.request.RegisterCarDummyRequestDto;
+import com.yangsunkue.suncar.dto.car.response.CarDetailResponseDto;
 import com.yangsunkue.suncar.dto.car.response.CarListResponseDto;
 import com.yangsunkue.suncar.dto.car.response.RegisterCarResponseDto;
-import com.yangsunkue.suncar.exception.DummyDataNotSupportedException;
-import com.yangsunkue.suncar.repository.car.*;
-import com.yangsunkue.suncar.repository.user.UserRepository;
+import com.yangsunkue.suncar.dto.repository.CarDetailFetchResult;
+import com.yangsunkue.suncar.entity.car.CarListingImage;
+import com.yangsunkue.suncar.exception.NotFoundException;
+import com.yangsunkue.suncar.mapper.CarMapper;
+import com.yangsunkue.suncar.repository.car.CarListingRepository;
 import com.yangsunkue.suncar.service.car.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
@@ -15,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,6 +29,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CarFacadeServiceImpl implements CarFacadeService {
 
+    private final CarMapper carMapper;
+    private final CarListingRepository carListingRepository;
     private final CarListingService carListingService;
 
     /**
@@ -35,6 +40,35 @@ public class CarFacadeServiceImpl implements CarFacadeService {
     public List<CarListResponseDto> getCarList() {
         List<CarListResponseDto> carList = carListingService.getCarList();
         return carList;
+    }
+
+    /**
+     * 판매 차량 상세정보를 조회합니다.
+     * QueryDSL을 사용하여 데이터를 가져온 후, 서비스에서 매퍼를 통해 DTO로 변환됩니다.
+     *
+     * @param listingId 차량 판매등록 ID
+     */
+    @Override
+    public CarDetailResponseDto getCarDetail(Long listingId) {
+
+        /** 차량 상세정보 엔티티들 조회 */
+        CarDetailFetchResult data = carListingRepository.getCarDetailById(listingId)
+                .orElseThrow(() -> new NotFoundException(ErrorMessages.CAR_LISTING_NOT_FOUND));
+
+        /** DTO로 변환 */
+        CarDetailResponseDto carDetail = carMapper.toCarDetailResponseDto(data.carListing());
+
+        /** 나머지 데이터 매핑 */
+        processImages(data.images(), carDetail);
+        carDetail.setAccidents(carMapper.toCarAccidentWithRepairsDtos(data.accidents(), data.repairsByAccidentId()));
+        carDetail.setMileages(carMapper.toCarMileageDtos(data.mileages()));
+        carDetail.setOptions(carMapper.toCarOptionDtos(data.options()));
+        carDetail.setOwnershipChanges(carMapper.toCarOwnershipChangeDtos(data.ownershipChanges()));
+        if (data.usage() != null) {
+            carDetail.setUsage(carMapper.toCarUsageDto(data.usage()));
+        }
+
+        return carDetail;
     }
 
     /**
@@ -69,11 +103,23 @@ public class CarFacadeServiceImpl implements CarFacadeService {
     }
 
     /**
-     * 차량을 판매등록합니다. - 더미 데이터 입력을 위한 오버로딩 메서드 입니다.
+     * 이미지 데이터를 받아 메인/일반 이미지로 구분하여 dto에 담습니다.
      */
-    @Override
-    @Transactional
-    public RegisterCarResponseDto registerCar(RegisterCarDummyRequestDto dto, String userId) {
-        throw new DummyDataNotSupportedException(ErrorMessages.DUMMY_DATA_NOT_SUPPORTED);
+    private void processImages(List<CarListingImage> images, CarDetailResponseDto dto) {
+
+        String mainImageUrl = null;
+        List<String> additionalImageUrls = new ArrayList<>();
+
+        for (CarListingImage image : images) {
+            if (image.getIsPrimary()) {
+                mainImageUrl = image.getImageUrl();
+            }
+            else {
+                additionalImageUrls.add(image.getImageUrl());
+            }
+        }
+
+        dto.setMainImageUrl(mainImageUrl);
+        dto.setAdditionalImageUrls(additionalImageUrls);
     }
 }

@@ -4,7 +4,6 @@ import com.yangsunkue.suncar.dto.auth.request.LoginRequestDto;
 import com.yangsunkue.suncar.dto.auth.response.LoginResponseDto;
 import com.yangsunkue.suncar.dto.auth.request.SignUpRequestDto;
 import com.yangsunkue.suncar.dto.auth.response.SignUpResponseDto;
-import com.yangsunkue.suncar.entity.user.User;
 
 public interface AuthService {
 

@@ -20,7 +20,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final UserRepository userRepository;
 
     /**
-     * UserId를 받아 CustomUserDetails 객체를 반환합니다.
+     * 사용자 아이디를 받아 CustomUserDetails 객체를 반환합니다.
      */
     @Override
     @Transactional(readOnly = true)
