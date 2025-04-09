@@ -1,6 +1,5 @@
 package com.yangsunkue.suncar.dto.car;
 
-
 import lombok.*;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)

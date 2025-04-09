@@ -7,5 +7,5 @@ public interface ErrorLogService {
     /**
      * 에러 로그를 출력합니다.
      */
-    public void logError(Exception e, HttpServletRequest request);
+    void logError(Exception e, HttpServletRequest request);
 }

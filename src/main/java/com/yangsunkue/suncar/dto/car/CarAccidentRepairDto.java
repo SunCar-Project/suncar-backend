@@ -1,8 +1,6 @@
 package com.yangsunkue.suncar.dto.car;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.yangsunkue.suncar.entity.car.CarAccident;
-import com.yangsunkue.suncar.entity.car.CarAccidentRepair;
 import lombok.*;
 
 import java.math.BigDecimal;

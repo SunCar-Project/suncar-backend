@@ -54,20 +54,3 @@ public class CarAccidentRepair extends BaseEntity {
     @Column(name = "insurance_amount")
     private BigDecimal insuranceAmount;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

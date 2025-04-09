@@ -32,26 +32,3 @@ public class CarListingImage extends BaseEntity {
     @Column(name = "is_primary", nullable = false)
     private Boolean isPrimary;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

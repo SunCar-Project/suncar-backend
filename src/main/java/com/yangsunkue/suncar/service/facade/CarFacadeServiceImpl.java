@@ -47,7 +47,6 @@ public class CarFacadeServiceImpl implements CarFacadeService {
      * QueryDSL을 사용하여 데이터를 가져온 후, 서비스에서 매퍼를 통해 DTO로 변환됩니다.
      *
      * @param listingId 차량 판매등록 ID
-     * @return
      */
     @Override
     public CarDetailResponseDto getCarDetail(Long listingId) {
@@ -58,8 +57,6 @@ public class CarFacadeServiceImpl implements CarFacadeService {
 
         /** DTO로 변환 */
         CarDetailResponseDto carDetail = carMapper.toCarDetailResponseDto(data.carListing());
-
-        Long carId = data.carListing().getCar().getId();
 
         /** 나머지 데이터 매핑 */
         processImages(data.images(), carDetail);

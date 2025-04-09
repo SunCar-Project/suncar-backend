@@ -4,7 +4,7 @@ import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 /**
- * 커스텀 예외의 기본 틀이 되는 클래스
+ * 커스텀 예외의 기본 틀이 되는 클래스 입니다.
  */
 @Getter
 public abstract class BaseException extends RuntimeException {

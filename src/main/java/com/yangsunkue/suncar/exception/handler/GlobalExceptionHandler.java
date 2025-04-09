@@ -109,9 +109,6 @@ public class GlobalExceptionHandler {
                 .body(response);
     }
 
-
-
-
     /**
      * 500 InternalServerError - 예상치 못한 모든 예외를 처리합니다.
      */

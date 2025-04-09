@@ -46,25 +46,3 @@ public class CarListing extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private CarListingStatus status;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

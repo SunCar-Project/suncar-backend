@@ -39,6 +39,4 @@ public class RandomUtils {
     public static boolean randomBoolean() {
         return new Random().nextBoolean();
     }
-
-
 }

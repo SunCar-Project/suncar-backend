@@ -61,6 +61,4 @@ public class CarDetailResponseDto {
     private List<CarOptionDto> options;
     private List<CarOwnershipChangeDto> ownershipChanges;
     private CarUsageDto usage;
-
-
 }

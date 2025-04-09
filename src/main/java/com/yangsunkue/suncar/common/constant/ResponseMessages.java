@@ -1,5 +1,8 @@
 package com.yangsunkue.suncar.common.constant;
 
+/**
+ * 클라이언트 응답용 메시지를 정의한 클래스 입니다.
+ */
 public class ResponseMessages {
 
     /**

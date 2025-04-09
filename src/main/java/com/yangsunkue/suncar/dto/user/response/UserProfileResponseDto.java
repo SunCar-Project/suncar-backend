@@ -1,8 +1,6 @@
 package com.yangsunkue.suncar.dto.user.response;
 
 import com.yangsunkue.suncar.common.enums.UserRole;
-import com.yangsunkue.suncar.entity.user.User;
-import com.yangsunkue.suncar.security.CustomUserDetails;
 import lombok.*;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
