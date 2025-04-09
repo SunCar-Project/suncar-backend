@@ -2,7 +2,6 @@ package com.yangsunkue.suncar.dto.car;
 
 import lombok.*;
 
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 

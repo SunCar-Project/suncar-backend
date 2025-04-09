@@ -1,8 +1,6 @@
 package com.yangsunkue.suncar.dto.car;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.yangsunkue.suncar.entity.car.Car;
-import com.yangsunkue.suncar.entity.car.CarUsage;
 import lombok.*;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)

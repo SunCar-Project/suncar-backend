@@ -3,7 +3,6 @@ package com.yangsunkue.suncar.util;
 import com.yangsunkue.suncar.common.enums.CarListingStatus;
 import com.yangsunkue.suncar.common.enums.OptionInstallStatus;
 import com.yangsunkue.suncar.dto.car.*;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +19,6 @@ import java.util.List;
  */
 @Component
 @Profile("dev")
-@RequiredArgsConstructor
 public class CarDummyDataGenerator {
 
     /** Model */
@@ -227,36 +225,18 @@ public class CarDummyDataGenerator {
     }
 
     /** CarUsage */
-    public List<CarUsageDto> generateCarUsageDtos(Long carId) {
+    public CarUsageDto generateCarUsageDto(Long carId) {
 
-        List<CarUsageDto> usageList = new ArrayList<>();
+        String rentalHistory = "있음";
+        String businessHistory = "있음";
+        String governmentHistory = "없음";
 
-        String rentalHistory1 = "있음";
-        String businessHistory1 = "있음";
-        String governmentHistory1 = "없음";
-
-        CarUsageDto usage1 = CarUsageDto.builder()
+        return CarUsageDto.builder()
                 .carId(carId)
-                .rentalHistory(rentalHistory1)
-                .businessHistory(businessHistory1)
-                .governmentHistory(governmentHistory1)
+                .rentalHistory(rentalHistory)
+                .businessHistory(businessHistory)
+                .governmentHistory(governmentHistory)
                 .build();
-
-        String rentalHistory2 = "없음";
-        String businessHistory2 = "없음";
-        String governmentHistory2 = "있음";
-
-        CarUsageDto usage2 = CarUsageDto.builder()
-                .carId(carId)
-                .rentalHistory(rentalHistory2)
-                .businessHistory(businessHistory2)
-                .governmentHistory(governmentHistory2)
-                .build();
-
-        usageList.add(usage1);
-        usageList.add(usage2);
-
-        return usageList;
     }
 
     /** CarOption */

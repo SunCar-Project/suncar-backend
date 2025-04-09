@@ -11,7 +11,7 @@ import java.util.List;
 public interface CarUsageService {
 
     /**
-     * 차량 사용이력 정보를 다수 생성합니다.
+     * 차량 사용이력 정보를 생성합니다.
      */
-    List<CarUsage> createUsages(List<CarUsageDto> dtos);
+    CarUsage createUsage(CarUsageDto dto);
 }

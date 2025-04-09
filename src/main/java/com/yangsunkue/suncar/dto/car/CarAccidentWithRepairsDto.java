@@ -5,7 +5,6 @@ import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
-
 /**
  * 기존 사고이력 Dto에 수리정보를 포함하기 위한 Dto 입니다.
  */

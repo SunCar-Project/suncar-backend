@@ -36,8 +36,7 @@ public class JwtUtil {
 
     /**
      * 서명 키를 생성합니다.
-     *
-     * 사용자 정의 시크릿 키를 해시에 사용할 수 있도록 바이트화해서 리턴 -> 서명 키
+     * 서명 키 : 사용자 정의 시크릿 키를 해시에 사용할 수 있도록 바이트화한 것
      */
     private Key getSigningKey() {
         byte[] keyBytes = secret.getBytes(StandardCharsets.UTF_8);
@@ -56,7 +55,7 @@ public class JwtUtil {
          */
         Map<String, Object> claims = new HashMap<>();
 
-        // userId를 고유 식별자 Subject로 사용
+        // 사용자 아이디를 고유 식별자 Subject로 사용
         return createToken(claims, userDetails.getUserId());
     }
 
@@ -144,4 +143,3 @@ public class JwtUtil {
         );
     }
 }
-

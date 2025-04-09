@@ -19,8 +19,8 @@ import java.util.Collections;
 @ToString
 public class CustomUserDetails implements UserDetails {
 
-    private final String userId;    // 사용자 ID
-    private final String username;  // 원래 username
+    private final String userId; // 로그인 아이디
+    private final String username; // 사용자 이름
     private final String password;
     private final String email;
     private final String phoneNumber;

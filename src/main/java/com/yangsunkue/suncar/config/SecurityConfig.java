@@ -29,9 +29,7 @@ public class SecurityConfig {
 
     private final JwtRequestFilter jwtRequestFilter;
 
-    /**
-     * Security Filter Chain 설정
-     */
+    /** Security Filter Chain 설정 */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -64,9 +62,7 @@ public class SecurityConfig {
         return http.build();
     }
 
-    /**
-     * 패스워드 인코더 빈 등록
-     */
+    /** 패스워드 인코더 빈 등록 */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -74,7 +70,6 @@ public class SecurityConfig {
 
     /**
      * AuthenticationManager 빈 등록
-     *
      * 사용자 인증 처리, 사용자명/비밀번호 로그인 요청 시 이를 검증한다.
      */
     @Bean
@@ -82,9 +77,7 @@ public class SecurityConfig {
         return authConfig.getAuthenticationManager();
     }
 
-    /**
-     * CORS 설정
-     */
+    /** CORS 설정 */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();

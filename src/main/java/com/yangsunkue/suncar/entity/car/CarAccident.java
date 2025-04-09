@@ -39,17 +39,3 @@ public class CarAccident extends BaseEntity {
     @Column(name = "processing_type", length = 20)
     private String processingType;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

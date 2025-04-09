@@ -208,7 +208,7 @@ public class CarListingRepositoryCustomImpl extends Querydsl4RepositorySupport i
         CarUsage usage = getQueryFactory()
                 .selectFrom(carUsage)
                 .where(carUsage.car.id.eq(carId))
-                .fetchFirst();
+                .fetchOne();
 
         /** 결과 엔티티 리턴 */
         return Optional.of(new CarDetailFetchResult(
@@ -223,5 +223,3 @@ public class CarListingRepositoryCustomImpl extends Querydsl4RepositorySupport i
         ));
     }
 }
-
-

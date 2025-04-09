@@ -7,7 +7,6 @@ import com.yangsunkue.suncar.dto.auth.request.SignUpRequestDto;
 import com.yangsunkue.suncar.dto.auth.response.SignUpResponseDto;
 import com.yangsunkue.suncar.entity.user.User;
 import com.yangsunkue.suncar.exception.DuplicateResourceException;
-import com.yangsunkue.suncar.exception.NotFoundException;
 import com.yangsunkue.suncar.mapper.UserMapper;
 import com.yangsunkue.suncar.repository.user.UserRepository;
 import com.yangsunkue.suncar.security.CustomUserDetails;

@@ -22,6 +22,8 @@ public class ModelServiceImpl implements ModelService {
     /**
      * 차량 모델/브랜드 정보를 생성합니다.
      */
+    @Override
+    @Transactional
     public Model createModel(ModelDto dto) {
         Model model = carMapper.fromModelDto(dto);
         Model saved = modelRepository.save(model);

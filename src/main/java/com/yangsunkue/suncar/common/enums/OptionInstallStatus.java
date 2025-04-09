@@ -9,6 +9,7 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum OptionInstallStatus {
+
     INSTALLED("장착"),
     OPTIONAL("선택옵션"),
     NOT_INSTALLED("미장착"),
