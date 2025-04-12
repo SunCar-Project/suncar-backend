@@ -1,7 +1,5 @@
 package com.yangsunkue.suncar.service.facade;
 
-import com.yangsunkue.suncar.common.enums.CarListingStatus;
-import com.yangsunkue.suncar.common.enums.UserRole;
 import com.yangsunkue.suncar.dto.car.*;
 import com.yangsunkue.suncar.dto.car.request.RegisterCarDummyRequestDto;
 import com.yangsunkue.suncar.dto.car.response.CarDetailResponseDto;
@@ -14,7 +12,10 @@ import com.yangsunkue.suncar.mapper.CarMapper;
 import com.yangsunkue.suncar.repository.car.CarListingRepository;
 import com.yangsunkue.suncar.repository.user.UserRepository;
 import com.yangsunkue.suncar.service.car.*;
+import com.yangsunkue.suncar.util.CarDtoFactory;
 import com.yangsunkue.suncar.util.CarDummyDataGenerator;
+import com.yangsunkue.suncar.util.CarFactory;
+import com.yangsunkue.suncar.util.UserFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,13 +25,12 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.*;
 
 import static org.mockito.Mockito.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@ExtendWith(MockitoExtension.class) // 이거뭐지
+@ExtendWith(MockitoExtension.class)
 class CarFacadeDummyServiceImplTest {
 
     /** 실제 테스트 대상이 되는 서비스 객체, Mock객체가 여기에 주입됨 */
@@ -92,69 +92,18 @@ class CarFacadeDummyServiceImplTest {
     @BeforeEach
     void setUp() {
 
-        /** testUser 객체 생성 */
-        testUser = User.builder()
-                .id(1L)
-                .userId("testUser")
-                .email("testUser@test.com")
-                .username("테스트사용자")
-                .passwordHash("hashedPassword")
-                .phoneNumber("01012345678")
-                .role(UserRole.회원)
-                .build();
-
-        /** testModel 객체 생성 */
-        testModel = Model.builder()
-                .id(1L)
-                .brandName("테스트브랜드")
-                .modelName("테스트모델")
-                .isForeign(true)
-                .build();
-
-        /** testCar 객체 생성 */
-        testCar = Car.builder()
-                .id(1L)
-                .model(testModel)
-                .carName("테스트자동차명")
-                .carNumber("123가1234")
-                .displacement("2998")
-                .fuelType("가솔린")
-                .year(2025)
-                .month(12)
-                .bodyShape("왜건")
-                .modelType("자가용 승용")
-                .firstInsuranceDate(LocalDate.of(2025, 04, 10))
-                .identificationNumber("테스트차대번호")
-                .minPrice(BigDecimal.valueOf(5000))
-                .maxPrice(BigDecimal.valueOf(3500))
-                .build();
-
-        /** testCarListing 객체 생성 */
-        testCarListing = CarListing.builder()
-                .id(1L)
-                .car(testCar)
-                .user(testUser)
-                .price(BigDecimal.valueOf(5000))
-                .description("테스트설명")
-                .status(CarListingStatus.FOR_SALE)
-                .build();
+        testUser = UserFactory.createUser();
+        testModel = CarFactory.createModel();
+        testCar = CarFactory.createCar();
+        testCarListing = CarFactory.createCarListing();
+        testCarUsage = CarFactory.createCarUsage();
+        testCarMileage = CarFactory.createCarMileage();
 
         /** testCarListResponseDtos 객체 생성 */
-        List<CarMileage> mileages = new ArrayList<>();
-        testCarMileage = CarMileage.builder()
-                .id(1L)
-                .car(testCar)
-                .distance(20000)
-                .provider("테스트제공처")
-                .recordDate(LocalDate.of(2025, 04, 10))
-                .build();
-        mileages.add(testCarMileage);
-
         String mainImageUrl = "테스트메인이미지URL";
 
         List<String> additionalImageUrls = new ArrayList<>();
-        String additionalImageUrl = "테스트이미지URL";
-        additionalImageUrls.add(additionalImageUrl);
+        additionalImageUrls.add("테스트이미지URL");
 
         testCarListResponseDtos = new ArrayList<>();
         CarListResponseDto carListResponseDto = CarListResponseDto.builder()
@@ -172,29 +121,15 @@ class CarFacadeDummyServiceImplTest {
         testCarListResponseDtos.add(carListResponseDto);
 
         /** testCarDetailFetchResult 객체 생성 */
+
         List<CarListingImage> images = new ArrayList<>();
-        CarListingImage mainImage = CarListingImage.builder()
-                .id(1L)
-                .carListing(testCarListing)
-                .imageUrl(mainImageUrl)
-                .isPrimary(true)
-                .build();
-        CarListingImage additionalImage = CarListingImage.builder()
-                .id(2L)
-                .carListing(testCarListing)
-                .imageUrl(additionalImageUrl)
-                .isPrimary(false)
-                .build();
+        CarListingImage mainImage = CarFactory.createCarListingImageByIsPrimary(true);
+        CarListingImage additionalImage = CarFactory.createCarListingImageByIsPrimary(false);
         images.add(mainImage);
         images.add(additionalImage);
 
-        testCarUsage = CarUsage.builder()
-                .id(1L)
-                .car(testCar)
-                .rentalHistory("없음")
-                .businessHistory("없음")
-                .governmentHistory("없음")
-                .build();
+        List<CarMileage> mileages = new ArrayList<>();
+        mileages.add(testCarMileage);
 
         List<CarAccident> accidents = new ArrayList<>();
         Map<Long, List<CarAccidentRepair>> repairsByAccidentId = new HashMap<>();
@@ -212,26 +147,13 @@ class CarFacadeDummyServiceImplTest {
                 testCarUsage
         );
 
-
         /** testCarDetailResponseDto 객체 생성 */
-        List<CarAccidentWithRepairsDto> accidentWithRepairDtos = new ArrayList<>();
+        CarUsageDto usageDto = CarDtoFactory.createCarUsageDto();
 
         List<CarMileageDto> mileageDtos = new ArrayList<>();
-        CarMileageDto mileageDto = CarMileageDto.builder()
-                .carId(testCar.getId())
-                .distance(testCarMileage.getDistance())
-                .provider(testCarMileage.getProvider())
-                .recordDate(testCarMileage.getRecordDate())
-                .build();
-        mileageDtos.add(mileageDto);
+        mileageDtos.add(CarDtoFactory.createCarMileageDto());
 
-        CarUsageDto usageDto = CarUsageDto.builder()
-                .carId(testCar.getId())
-                .rentalHistory(testCarUsage.getRentalHistory())
-                .businessHistory(testCarUsage.getBusinessHistory())
-                .governmentHistory(testCarUsage.getGovernmentHistory())
-                .build();
-
+        List<CarAccidentWithRepairsDto> accidentWithRepairDtos = new ArrayList<>();
         List<CarOptionDto> optionDtos = new ArrayList<>();
         List<CarOwnershipChangeDto> ownershipChangeDtos = new ArrayList<>();
 
@@ -296,15 +218,13 @@ class CarFacadeDummyServiceImplTest {
         List<CarListResponseDto> result = carFacadeDummyServiceImpl.getCarList();
 
         // then
-        assertThat(result).isNotNull();
+        verify(carListingService).getCarList();
+
         assertThat(result).hasSize(testCarListResponseDtos.size());
         assertThat(result.get(0).getCarListingId()).isEqualTo(testCarListing.getId());
         assertThat(result.get(0))
                 .usingRecursiveComparison()
                 .isEqualTo(testCarListResponseDtos.get(0));
-
-        // verify
-        verify(carListingService).getCarList();
     }
 
     @Test
@@ -312,7 +232,8 @@ class CarFacadeDummyServiceImplTest {
     void getCarDetailTest() {
 
         // given
-        Long listingId = 1L;
+        Long listingId = testCarListing.getId();
+
         when(carListingRepository.getCarDetailById(listingId)).thenReturn(Optional.of(testCarDetailFetchResult));
         when(carMapper.toCarDetailResponseDto(any(CarListing.class))).thenReturn(testCarDetailResponseDto);
 
@@ -320,17 +241,15 @@ class CarFacadeDummyServiceImplTest {
         CarDetailResponseDto result = carFacadeDummyServiceImpl.getCarDetail(listingId);
 
         // then
-        assertThat(result).isNotNull();
+        verify(carListingRepository).getCarDetailById(listingId);
+        verify(carMapper).toCarDetailResponseDto(any(CarListing.class));
+
         assertThat(result.getId()).isEqualTo(testCarListing.getId());
         assertThat(result.getCarId()).isEqualTo(testCar.getId());
         assertThat(result.getSellerId()).isEqualTo(testUser.getId());
         assertThat(result)
                 .usingRecursiveComparison()
                 .isEqualTo(testCarDetailResponseDto);
-
-        // verify
-        verify(carListingRepository).getCarDetailById(listingId);
-        verify(carMapper).toCarDetailResponseDto(any(CarListing.class));
     }
 
     @Test
@@ -341,25 +260,28 @@ class CarFacadeDummyServiceImplTest {
         String userId = testUser.getUserId();
 
         /** 테스트에 필요한 기본 객체 생성 */
-        ModelDto modelDto = ModelDto.builder().build();
-        CarDto carDto = CarDto.builder().build();
-        CarListingDto carListingDto = CarListingDto.builder().build();
-        CarUsageDto usageDto = CarUsageDto.builder().build();
-        CarUsage usage = CarUsage.builder().build();
-        CarListingImageDto mainImageDto = CarListingImageDto.builder().build();
-        CarListingImage mainImage = CarListingImage.builder().build();
-        List<CarAccidentDto> accidentDtos = new ArrayList<>();
+        CarUsage usage = CarFactory.createCarUsage();
+        CarListingImage mainImage = CarFactory.createCarListingImageByIsPrimary(true);
+
+        ModelDto modelDto = CarDtoFactory.createModelDto();
+        CarDto carDto = CarDtoFactory.createCarDto();
+        CarListingDto carListingDto = CarDtoFactory.createCarListingDto();
+        CarUsageDto usageDto = CarDtoFactory.createCarUsageDto();
+        CarListingImageDto mainImageDto = CarDtoFactory.createCarListingImageDtoByIsPrimary(true);
+
         List<CarAccident> accidents = new ArrayList<>();
-        List<CarAccidentRepairDto> accidentRepairDtos = new ArrayList<>();
         List<CarAccidentRepair> accidentRepairs = new ArrayList<>();
-        List<CarMileageDto> mileageDtos = new ArrayList<>();
         List<CarMileage> mileages = new ArrayList<>();
-        List<CarOwnershipChangeDto> ownershipChangeDtos = new ArrayList<>();
         List<CarOwnershipChange> ownershipChanges = new ArrayList<>();
-        List<CarOptionDto> optionDtos = new ArrayList<>();
         List<CarOption> options = new ArrayList<>();
-        List<CarListingImageDto> additionalImageDtos = new ArrayList<>();
         List<CarListingImage> additionalImages = new ArrayList<>();
+
+        List<CarAccidentDto> accidentDtos = new ArrayList<>();
+        List<CarAccidentRepairDto> accidentRepairDtos = new ArrayList<>();
+        List<CarMileageDto> mileageDtos = new ArrayList<>();
+        List<CarOwnershipChangeDto> ownershipChangeDtos = new ArrayList<>();
+        List<CarOptionDto> optionDtos = new ArrayList<>();
+        List<CarListingImageDto> additionalImageDtos = new ArrayList<>();
 
         /** 메서드 모킹 */
         when(carDummyDataGenerator.generateModelDto()).thenReturn(modelDto);
@@ -403,15 +325,13 @@ class CarFacadeDummyServiceImplTest {
         RegisterCarResponseDto result = carFacadeDummyServiceImpl.registerCar(testRegisterCarDummyRequestDto, userId);
 
         // then
-        assertThat(result).isNotNull();
+        verify(userRepository).findByUserId(userId);
+        verify(carMapper).toRegisterCarResponseDto(any(CarListing.class), any(Car.class), any(Model.class));
+
         assertThat(result.getListingId()).isEqualTo(testCarListing.getId());
         assertThat(result.getPrice()).isEqualTo(testCarListing.getPrice());
         assertThat(result)
                 .usingRecursiveComparison()
                 .isEqualTo(testRegisterCarResponseDto);
-
-        // verify
-        verify(userRepository).findByUserId(userId);
-        verify(carMapper).toRegisterCarResponseDto(any(CarListing.class), any(Car.class), any(Model.class));
     }
 }
