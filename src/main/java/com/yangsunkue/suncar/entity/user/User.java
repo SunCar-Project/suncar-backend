@@ -17,7 +17,7 @@ import org.hibernate.annotations.SQLDelete;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @ToString
 @Getter
-@Builder
+@Builder(toBuilder = true)
 public class User extends BaseEntity {
 
     @Id
