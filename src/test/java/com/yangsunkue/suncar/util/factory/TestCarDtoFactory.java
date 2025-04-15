@@ -1,13 +1,13 @@
-package com.yangsunkue.suncar.util;
+package com.yangsunkue.suncar.util.factory;
 
 import com.yangsunkue.suncar.dto.car.*;
 import com.yangsunkue.suncar.entity.car.*;
 import com.yangsunkue.suncar.entity.user.User;
 
-public class CarDtoFactory {
+public class TestCarDtoFactory {
 
     public static ModelDto createModelDto() {
-        Model model = CarFactory.createModel();
+        Model model = TestCarFactory.createModel();
 
         return ModelDto.builder()
                 .brandName(model.getBrandName())
@@ -17,8 +17,8 @@ public class CarDtoFactory {
     }
 
     public static CarDto createCarDto() {
-        Car car = CarFactory.createCar();
-        Model model = CarFactory.createModel();
+        Car car = TestCarFactory.createCar();
+        Model model = TestCarFactory.createModel();
 
         return CarDto.builder()
                 .modelId(model.getId())
@@ -39,9 +39,9 @@ public class CarDtoFactory {
     }
 
     public static CarListingDto createCarListingDto() {
-        CarListing carListing = CarFactory.createCarListing();
-        Car car = CarFactory.createCar();
-        User user = UserFactory.createUser();
+        CarListing carListing = TestCarFactory.createCarListing();
+        Car car = TestCarFactory.createCar();
+        User user = TestUserFactory.createUser();
 
         return CarListingDto.builder()
                 .carId(car.getId())
@@ -63,8 +63,8 @@ public class CarDtoFactory {
      *                      isPrimary: false
      */
     public static CarListingImageDto createCarListingImageDtoByIsPrimary(Boolean isPrimary) {
-        CarListingImage carListingImage = CarFactory.createCarListingImageByIsPrimary(isPrimary);
-        CarListing carListing = CarFactory.createCarListing();
+        CarListingImage carListingImage = TestCarFactory.createCarListingImageByIsPrimary(isPrimary);
+        CarListing carListing = TestCarFactory.createCarListing();
 
         return CarListingImageDto.builder()
                 .listingId(carListing.getId())
@@ -74,8 +74,8 @@ public class CarDtoFactory {
     }
 
     public static CarMileageDto createCarMileageDto() {
-        Car car = CarFactory.createCar();
-        CarMileage carMileage = CarFactory.createCarMileage();
+        Car car = TestCarFactory.createCar();
+        CarMileage carMileage = TestCarFactory.createCarMileage();
 
         return CarMileageDto.builder()
                 .carId(car.getId())
@@ -86,8 +86,8 @@ public class CarDtoFactory {
     }
 
     public static CarUsageDto createCarUsageDto() {
-        Car car = CarFactory.createCar();
-        CarUsage carUsage = CarFactory.createCarUsage();
+        Car car = TestCarFactory.createCar();
+        CarUsage carUsage = TestCarFactory.createCarUsage();
 
         return CarUsageDto.builder()
                 .carId(car.getId())

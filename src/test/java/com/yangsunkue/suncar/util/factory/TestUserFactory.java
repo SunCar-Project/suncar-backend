@@ -1,9 +1,9 @@
-package com.yangsunkue.suncar.util;
+package com.yangsunkue.suncar.util.factory;
 
 import com.yangsunkue.suncar.common.enums.UserRole;
 import com.yangsunkue.suncar.entity.user.User;
 
-public class UserFactory {
+public class TestUserFactory {
 
     private static final String PLAIN_PASSWORD = "1234";
     private static final String ACCESS_TOKEN = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ5c2s5NTI2IiwiaWF0IjoxNzQ0MTY4NTUzLCJleHAiOjE3NDQyNTQ5NTN9.Hc43KWQbolIXyD3sUnk6b683SsDfniYn8zWZygNWp60";

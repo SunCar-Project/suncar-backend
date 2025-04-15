@@ -14,7 +14,7 @@ import org.hibernate.annotations.SQLDelete;
 @SQLDelete(sql = "UPDATE model SET is_deleted = true WHERE id = ?")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder
+@Builder(toBuilder = true)
 @Getter
 public class Model extends BaseEntity {
 

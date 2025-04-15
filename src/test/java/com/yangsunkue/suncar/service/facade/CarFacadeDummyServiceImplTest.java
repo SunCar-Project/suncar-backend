@@ -12,10 +12,10 @@ import com.yangsunkue.suncar.mapper.CarMapper;
 import com.yangsunkue.suncar.repository.car.CarListingRepository;
 import com.yangsunkue.suncar.repository.user.UserRepository;
 import com.yangsunkue.suncar.service.car.*;
-import com.yangsunkue.suncar.util.CarDtoFactory;
+import com.yangsunkue.suncar.util.factory.TestCarDtoFactory;
 import com.yangsunkue.suncar.util.CarDummyDataGenerator;
-import com.yangsunkue.suncar.util.CarFactory;
-import com.yangsunkue.suncar.util.UserFactory;
+import com.yangsunkue.suncar.util.factory.TestCarFactory;
+import com.yangsunkue.suncar.util.factory.TestUserFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -92,12 +92,12 @@ class CarFacadeDummyServiceImplTest {
     @BeforeEach
     void setUp() {
 
-        testUser = UserFactory.createUser();
-        testModel = CarFactory.createModel();
-        testCar = CarFactory.createCar();
-        testCarListing = CarFactory.createCarListing();
-        testCarUsage = CarFactory.createCarUsage();
-        testCarMileage = CarFactory.createCarMileage();
+        testUser = TestUserFactory.createUser();
+        testModel = TestCarFactory.createModel();
+        testCar = TestCarFactory.createCar();
+        testCarListing = TestCarFactory.createCarListing();
+        testCarUsage = TestCarFactory.createCarUsage();
+        testCarMileage = TestCarFactory.createCarMileage();
 
         /** testCarListResponseDtos 객체 생성 */
         String mainImageUrl = "테스트메인이미지URL";
@@ -123,8 +123,8 @@ class CarFacadeDummyServiceImplTest {
         /** testCarDetailFetchResult 객체 생성 */
 
         List<CarListingImage> images = new ArrayList<>();
-        CarListingImage mainImage = CarFactory.createCarListingImageByIsPrimary(true);
-        CarListingImage additionalImage = CarFactory.createCarListingImageByIsPrimary(false);
+        CarListingImage mainImage = TestCarFactory.createCarListingImageByIsPrimary(true);
+        CarListingImage additionalImage = TestCarFactory.createCarListingImageByIsPrimary(false);
         images.add(mainImage);
         images.add(additionalImage);
 
@@ -148,10 +148,10 @@ class CarFacadeDummyServiceImplTest {
         );
 
         /** testCarDetailResponseDto 객체 생성 */
-        CarUsageDto usageDto = CarDtoFactory.createCarUsageDto();
+        CarUsageDto usageDto = TestCarDtoFactory.createCarUsageDto();
 
         List<CarMileageDto> mileageDtos = new ArrayList<>();
-        mileageDtos.add(CarDtoFactory.createCarMileageDto());
+        mileageDtos.add(TestCarDtoFactory.createCarMileageDto());
 
         List<CarAccidentWithRepairsDto> accidentWithRepairDtos = new ArrayList<>();
         List<CarOptionDto> optionDtos = new ArrayList<>();
@@ -260,14 +260,14 @@ class CarFacadeDummyServiceImplTest {
         String userId = testUser.getUserId();
 
         /** 테스트에 필요한 기본 객체 생성 */
-        CarUsage usage = CarFactory.createCarUsage();
-        CarListingImage mainImage = CarFactory.createCarListingImageByIsPrimary(true);
+        CarUsage usage = TestCarFactory.createCarUsage();
+        CarListingImage mainImage = TestCarFactory.createCarListingImageByIsPrimary(true);
 
-        ModelDto modelDto = CarDtoFactory.createModelDto();
-        CarDto carDto = CarDtoFactory.createCarDto();
-        CarListingDto carListingDto = CarDtoFactory.createCarListingDto();
-        CarUsageDto usageDto = CarDtoFactory.createCarUsageDto();
-        CarListingImageDto mainImageDto = CarDtoFactory.createCarListingImageDtoByIsPrimary(true);
+        ModelDto modelDto = TestCarDtoFactory.createModelDto();
+        CarDto carDto = TestCarDtoFactory.createCarDto();
+        CarListingDto carListingDto = TestCarDtoFactory.createCarListingDto();
+        CarUsageDto usageDto = TestCarDtoFactory.createCarUsageDto();
+        CarListingImageDto mainImageDto = TestCarDtoFactory.createCarListingImageDtoByIsPrimary(true);
 
         List<CarAccident> accidents = new ArrayList<>();
         List<CarAccidentRepair> accidentRepairs = new ArrayList<>();

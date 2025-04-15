@@ -15,7 +15,7 @@ import java.math.BigDecimal;
 @SQLDelete(sql = "UPDATE car_accident_repair SET is_deleted = true WHERE id = ?")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder
+@Builder(toBuilder = true)
 @Getter
 public class CarAccidentRepair extends BaseEntity {
 

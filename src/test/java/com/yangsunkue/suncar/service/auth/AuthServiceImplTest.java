@@ -9,7 +9,7 @@ import com.yangsunkue.suncar.mapper.UserMapper;
 import com.yangsunkue.suncar.repository.user.UserRepository;
 import com.yangsunkue.suncar.security.CustomUserDetails;
 import com.yangsunkue.suncar.security.JwtUtil;
-import com.yangsunkue.suncar.util.UserFactory;
+import com.yangsunkue.suncar.util.factory.TestUserFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -56,7 +56,7 @@ class AuthServiceImplTest {
     @BeforeEach
     void setup() {
 
-        testUser = UserFactory.createUser();
+        testUser = TestUserFactory.createUser();
         testAuthentication = mock(Authentication.class);
         testUserDetails = mock(CustomUserDetails.class);
 
@@ -64,7 +64,7 @@ class AuthServiceImplTest {
                 .userId(testUser.getUserId())
                 .email(testUser.getEmail())
                 .username(testUser.getUsername())
-                .password(UserFactory.getPlainPassword())
+                .password(TestUserFactory.getPlainPassword())
                 .phoneNumber(testUser.getPhoneNumber())
                 .role(testUser.getRole())
                 .build();
@@ -80,13 +80,13 @@ class AuthServiceImplTest {
 
         testLoginRequestDto = LoginRequestDto.builder()
                 .userId(testUser.getUserId())
-                .password(UserFactory.getPlainPassword())
+                .password(TestUserFactory.getPlainPassword())
                 .build();
 
         testLoginResponseDto = LoginResponseDto.builder()
                 .userId(testUser.getUserId())
                 .username(testUser.getUsername())
-                .accessToken(UserFactory.getAccessToken())
+                .accessToken(TestUserFactory.getAccessToken())
                 .build();
     }
 
@@ -99,7 +99,7 @@ class AuthServiceImplTest {
         when(userRepository.existsByEmail(any(String.class))).thenReturn(false);
 
         when(passwordEncoder.encode(any(String.class))).thenReturn(testUser.getPasswordHash());
-        when(userMapper.fromSignUpRequestDto(any(SignUpRequestDto.class), any(String.class))).thenReturn(UserFactory.createUnSavedUser());
+        when(userMapper.fromSignUpRequestDto(any(SignUpRequestDto.class), any(String.class))).thenReturn(TestUserFactory.createUnSavedUser());
 
         when(userRepository.save(any(User.class))).thenReturn(testUser);
         when(userMapper.toSignUpResponseDto(any(User.class))).thenReturn(testSignUpResponseDto);
@@ -114,7 +114,7 @@ class AuthServiceImplTest {
         verify(passwordEncoder).encode(testSignUpRequestDto.getPassword());
         verify(userMapper).fromSignUpRequestDto(testSignUpRequestDto, testUser.getPasswordHash());
 
-        User unSavedUser = UserFactory.createUnSavedUser();
+        User unSavedUser = TestUserFactory.createUnSavedUser();
         verify(userRepository).save(argThat(user ->
                 user.getUserId().equals(unSavedUser.getUserId()) &&
                 user.getEmail().equals(unSavedUser.getEmail())
@@ -134,7 +134,7 @@ class AuthServiceImplTest {
         // given
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(testAuthentication);
         when(testAuthentication.getPrincipal()).thenReturn(testUserDetails);
-        when(jwtUtil.generateToken(any(CustomUserDetails.class))).thenReturn(UserFactory.getAccessToken());
+        when(jwtUtil.generateToken(any(CustomUserDetails.class))).thenReturn(TestUserFactory.getAccessToken());
         when(userMapper.toLoginResponseDtoFromUserDetails(any(CustomUserDetails.class), any(String.class))).thenReturn(testLoginResponseDto);
 
         // when
@@ -144,7 +144,7 @@ class AuthServiceImplTest {
         verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
         verify(testAuthentication).getPrincipal();
         verify(jwtUtil).generateToken(any(CustomUserDetails.class));
-        verify(userMapper).toLoginResponseDtoFromUserDetails(any(CustomUserDetails.class), eq(UserFactory.getAccessToken()));
+        verify(userMapper).toLoginResponseDtoFromUserDetails(any(CustomUserDetails.class), eq(TestUserFactory.getAccessToken()));
 
         assertThat(result.getUserId()).isEqualTo(testUser.getUserId());
         assertThat(result)
