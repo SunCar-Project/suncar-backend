@@ -13,7 +13,7 @@ import org.hibernate.annotations.SQLDelete;
 @SQLDelete(sql = "UPDATE car_listing_image SET is_deleted = true WHERE id = ?")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder
+@Builder(toBuilder = true)
 @Getter
 public class CarListingImage extends BaseEntity {
 

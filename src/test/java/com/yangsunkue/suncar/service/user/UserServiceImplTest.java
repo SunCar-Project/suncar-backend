@@ -6,7 +6,7 @@ import com.yangsunkue.suncar.entity.user.User;
 import com.yangsunkue.suncar.mapper.UserMapper;
 import com.yangsunkue.suncar.repository.user.UserRepository;
 import com.yangsunkue.suncar.security.CustomUserDetails;
-import com.yangsunkue.suncar.util.UserFactory;
+import com.yangsunkue.suncar.util.factory.TestUserFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -42,7 +42,7 @@ class UserServiceImplTest {
     @BeforeEach
     void setup() {
 
-        testUser = UserFactory.createUser();
+        testUser = TestUserFactory.createUser();
         testUserDetails = mock(CustomUserDetails.class);
 
         testUserProfileUpdateRequestDto = UserProfileUpdateRequestDto.builder()

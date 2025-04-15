@@ -64,7 +64,9 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.mockito:mockito-core'
 	testImplementation 'org.junit.jupiter:junit-jupiter-api'
+	testImplementation 'com.h2database:h2'
 	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+
 
 }
 

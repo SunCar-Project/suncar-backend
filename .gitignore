@@ -18,7 +18,6 @@ out/
 
 # 환경설정 파일
 application-*.yml
-application-*.properties
 !application.yml
 !application.properties
 
