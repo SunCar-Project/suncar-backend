@@ -1,10 +1,12 @@
 package com.yangsunkue.suncar.service.auth;
 
+import com.yangsunkue.suncar.common.constant.ErrorMessages;
 import com.yangsunkue.suncar.dto.auth.request.LoginRequestDto;
 import com.yangsunkue.suncar.dto.auth.request.SignUpRequestDto;
 import com.yangsunkue.suncar.dto.auth.response.LoginResponseDto;
 import com.yangsunkue.suncar.dto.auth.response.SignUpResponseDto;
 import com.yangsunkue.suncar.entity.user.User;
+import com.yangsunkue.suncar.exception.DuplicateResourceException;
 import com.yangsunkue.suncar.mapper.UserMapper;
 import com.yangsunkue.suncar.repository.user.UserRepository;
 import com.yangsunkue.suncar.security.CustomUserDetails;
@@ -18,10 +20,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -56,9 +60,9 @@ class AuthServiceImplTest {
     @BeforeEach
     void setup() {
 
-        testUser = TestUserFactory.createUser();
         testAuthentication = mock(Authentication.class);
         testUserDetails = mock(CustomUserDetails.class);
+        testUser = TestUserFactory.createUser();
 
         testSignUpRequestDto = SignUpRequestDto.builder()
                 .userId(testUser.getUserId())
@@ -92,7 +96,7 @@ class AuthServiceImplTest {
 
     @Test
     @DisplayName("일반 회원가입 테스트")
-    void createUserTest() {
+    void createUser() {
 
         // given
         when(userRepository.existsByUserId(any(String.class))).thenReturn(false);
@@ -108,6 +112,11 @@ class AuthServiceImplTest {
         SignUpResponseDto result = authServiceImpl.createUser(testSignUpRequestDto);
 
         // then
+        assertThat(result.getId()).isEqualTo(testUser.getId());
+        assertThat(result)
+                .usingRecursiveComparison()
+                .isEqualTo(testSignUpResponseDto);
+
         verify(userRepository).existsByUserId(testSignUpRequestDto.getUserId());
         verify(userRepository).existsByEmail(testSignUpRequestDto.getEmail());
 
@@ -120,16 +129,53 @@ class AuthServiceImplTest {
                 user.getEmail().equals(unSavedUser.getEmail())
         ));
         verify(userMapper).toSignUpResponseDto(testUser);
+    }
 
-        assertThat(result.getId()).isEqualTo(testUser.getId());
-        assertThat(result)
-                .usingRecursiveComparison()
-                .isEqualTo(testSignUpResponseDto);
+    @Test
+    @DisplayName("일반 회원가입 시 사용자 ID가 중복될 경우 DuplicateResourceException 반환하는지 테스트")
+    void shouldThrowDuplicateResourceWhenUserIdIsDuplicate() {
+
+        // given
+        String duplicateUserId = "abc123";
+        testSignUpRequestDto.setUserId(duplicateUserId);
+        when(userRepository.existsByUserId(duplicateUserId)).thenReturn(true);
+
+        // when
+        DuplicateResourceException exception = assertThrows(DuplicateResourceException.class,
+                () -> authServiceImpl.createUser(testSignUpRequestDto));
+
+        // then
+        assertThat(exception.getMessage()).isEqualTo(ErrorMessages.DUPLICATE_USER_ID);
+        verify(userRepository).existsByUserId(duplicateUserId);
+        verify(userRepository, never()).existsByEmail(any(String.class));
+    }
+
+    @Test
+    @DisplayName("일반 회원가입 시 사용자 이메일이 중복될 경우 DuplicateResourceException 반환하는지 테스트")
+    void shouldThrowDuplicateResourceWhenEmailIsDuplicate() {
+
+        // given
+        String duplicateEmail = "abc123@gmail.com";
+        testSignUpRequestDto.setEmail(duplicateEmail);
+
+        when(userRepository.existsByUserId(testSignUpRequestDto.getUserId())).thenReturn(false);
+        when(userRepository.existsByEmail(duplicateEmail)).thenReturn(true);
+
+        // when
+        DuplicateResourceException exception = assertThrows(DuplicateResourceException.class,
+                () -> authServiceImpl.createUser(testSignUpRequestDto));
+
+        // then
+        assertThat(exception.getMessage()).isEqualTo(ErrorMessages.DUPLICATE_EMAIL);
+
+        verify(userRepository).existsByUserId(testSignUpRequestDto.getUserId());
+        verify(userRepository).existsByEmail(duplicateEmail);
+        verify(passwordEncoder, never()).encode(any(String.class));
     }
 
     @Test
     @DisplayName("일반 로그인 테스트")
-    void loginTest() {
+    void login() {
 
         // given
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(testAuthentication);
@@ -141,14 +187,31 @@ class AuthServiceImplTest {
         LoginResponseDto result = authServiceImpl.login(testLoginRequestDto);
 
         // then
-        verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
-        verify(testAuthentication).getPrincipal();
-        verify(jwtUtil).generateToken(any(CustomUserDetails.class));
-        verify(userMapper).toLoginResponseDtoFromUserDetails(any(CustomUserDetails.class), eq(TestUserFactory.getAccessToken()));
-
         assertThat(result.getUserId()).isEqualTo(testUser.getUserId());
         assertThat(result)
                 .usingRecursiveComparison()
                 .isEqualTo(testLoginResponseDto);
+
+        verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
+        verify(testAuthentication).getPrincipal();
+        verify(jwtUtil).generateToken(any(CustomUserDetails.class));
+        verify(userMapper).toLoginResponseDtoFromUserDetails(any(CustomUserDetails.class), eq(TestUserFactory.getAccessToken()));
+    }
+
+    @Test
+    @DisplayName("로그인 실패 시 BadCredentialsException 반환하는지 테스트")
+    void shouldThrowBadCredentialsWhenLoginFails() {
+
+        // given
+        when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
+                .thenThrow(new BadCredentialsException("Invalid credentials"));
+
+        // when
+        assertThrows(BadCredentialsException.class,
+                () -> authServiceImpl.login(testLoginRequestDto));
+
+        // then
+        verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
+        verify(testAuthentication, never()).getPrincipal();
     }
 }

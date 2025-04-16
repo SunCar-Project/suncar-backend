@@ -213,7 +213,7 @@ class CarFacadeDummyServiceImplTest {
 
     @Test
     @DisplayName("판매중인 차량 목록 조회 테스트")
-    void getCarListTest() {
+    void getCarList() {
 
         // given
         when(carListingService.getCarList()).thenReturn(testCarListResponseDtos);
@@ -233,13 +233,13 @@ class CarFacadeDummyServiceImplTest {
 
     @Test
     @DisplayName("판매 차량 상세정보 조회 테스트")
-    void getCarDetailTest() {
+    void getCarDetail() {
 
         // given
         Long listingId = testCarListing.getId();
 
         when(carListingRepository.getCarDetailById(listingId)).thenReturn(Optional.of(testCarDetailFetchResult));
-        when(carMapper.toCarDetailResponseDto(any(CarListing.class))).thenReturn(testCarDetailResponseDto);
+        when(carMapper.toCarDetailResponseDto(testCarListing)).thenReturn(testCarDetailResponseDto);
 
         // when
         CarDetailResponseDto result = carFacadeDummyServiceImpl.getCarDetail(listingId);
@@ -253,12 +253,12 @@ class CarFacadeDummyServiceImplTest {
                 .isEqualTo(testCarDetailResponseDto);
 
         verify(carListingRepository).getCarDetailById(listingId);
-        verify(carMapper).toCarDetailResponseDto(any(CarListing.class));
+        verify(carMapper).toCarDetailResponseDto(testCarListing);
     }
 
     @Test
     @DisplayName("판매 차량 상세정보 조회 시 데이터가 존재하지 않을 경우 Not Found 반환하는지 테스트")
-    void getCarDetailShouldReturnNotFoundWhenCarListingDoesNotExistTest() {
+    void shouldThrowNotFoundWhenCarListingDoesNotExist() {
 
         // given
         Long nonExistentListingId = 99999L;
@@ -277,7 +277,7 @@ class CarFacadeDummyServiceImplTest {
 
     @Test
     @DisplayName("차량 판매등록 테스트 - 더미 데이터")
-    void registerCarTest() {
+    void registerCar() {
 
         // given
         String userId = testUser.getUserId();
@@ -308,41 +308,41 @@ class CarFacadeDummyServiceImplTest {
 
         /** 메서드 모킹 */
         when(carDummyDataGenerator.generateModelDto()).thenReturn(modelDto);
-        when(modelService.createModel(any(ModelDto.class))).thenReturn(testModel);
+        when(modelService.createModel(modelDto)).thenReturn(testModel);
 
-        when(carDummyDataGenerator.generateCarDto(anyLong(), any(String.class))).thenReturn(carDto);
-        when(carService.createCar(any(CarDto.class))).thenReturn(testCar);
+        when(carDummyDataGenerator.generateCarDto(testModel.getId(), testCar.getCarNumber())).thenReturn(carDto);
+        when(carService.createCar(carDto)).thenReturn(testCar);
 
         when(userRepository.findByUserId(userId)).thenReturn(Optional.of(testUser));
 
-        when(carDummyDataGenerator.generateCarListingDto(anyLong(), anyLong(), any(BigDecimal.class))).thenReturn(carListingDto);
-        when(carListingService.createListing(any(CarListingDto.class))).thenReturn(testCarListing);
+        when(carDummyDataGenerator.generateCarListingDto(testCar.getId(), testUser.getId(), testCarListing.getPrice())).thenReturn(carListingDto);
+        when(carListingService.createListing(carListingDto)).thenReturn(testCarListing);
 
-        when(carDummyDataGenerator.generateCarAccidentDtos(anyLong())).thenReturn(accidentDtos);
-        when(carAccidentService.createAccidents(anyList())).thenReturn(accidents);
+        when(carDummyDataGenerator.generateCarAccidentDtos(testCar.getId())).thenReturn(accidentDtos);
+        when(carAccidentService.createAccidents(accidentDtos)).thenReturn(accidents);
 
         when(carDummyDataGenerator.generateCarAccidentRepairDtos(anyList())).thenReturn(accidentRepairDtos);
-        when(carAccidentRepairService.createAccidentRepairs(anyList())).thenReturn(accidentRepairs);
+        when(carAccidentRepairService.createAccidentRepairs(accidentRepairDtos)).thenReturn(accidentRepairs);
 
-        when(carDummyDataGenerator.generateCarMileageDtos(anyLong())).thenReturn(mileageDtos);
-        when(carMileageService.createMileages(anyList())).thenReturn(mileages);
+        when(carDummyDataGenerator.generateCarMileageDtos(testCar.getId())).thenReturn(mileageDtos);
+        when(carMileageService.createMileages(mileageDtos)).thenReturn(mileages);
 
-        when(carDummyDataGenerator.generateCarOwnershipChangeDtos(anyLong())).thenReturn(ownershipChangeDtos);
-        when(carOwnershipChangeService.createChanges(anyList())).thenReturn(ownershipChanges);
+        when(carDummyDataGenerator.generateCarOwnershipChangeDtos(testCar.getId())).thenReturn(ownershipChangeDtos);
+        when(carOwnershipChangeService.createChanges(ownershipChangeDtos)).thenReturn(ownershipChanges);
 
-        when(carDummyDataGenerator.generateCarUsageDto(anyLong())).thenReturn(usageDto);
-        when(carUsageService.createUsage(any(CarUsageDto.class))).thenReturn(usage);
+        when(carDummyDataGenerator.generateCarUsageDto(testCar.getId())).thenReturn(usageDto);
+        when(carUsageService.createUsage(usageDto)).thenReturn(usage);
 
-        when(carDummyDataGenerator.generateCarOptionDtos(anyLong())).thenReturn(optionDtos);
-        when(carOptionService.createOptions(anyList())).thenReturn(options);
+        when(carDummyDataGenerator.generateCarOptionDtos(testCar.getId())).thenReturn(optionDtos);
+        when(carOptionService.createOptions(optionDtos)).thenReturn(options);
 
-        when(carDummyDataGenerator.generateCarListingImageDtoFromMainImage(anyLong(), any(String.class))).thenReturn(mainImageDto);
-        when(carListingImageService.createMainImage(any(CarListingImageDto.class))).thenReturn(mainImage);
+        when(carDummyDataGenerator.generateCarListingImageDtoFromMainImage(eq(testCarListing.getId()), any(String.class))).thenReturn(mainImageDto);
+        when(carListingImageService.createMainImage(mainImageDto)).thenReturn(mainImage);
 
-        when(carDummyDataGenerator.generateCarListingDtosFromAdditionalImages(anyLong(), anyList())).thenReturn(additionalImageDtos);
-        when(carListingImageService.createImages(anyList())).thenReturn(additionalImages);
+        when(carDummyDataGenerator.generateCarListingDtosFromAdditionalImages(eq(testCarListing.getId()), anyList())).thenReturn(additionalImageDtos);
+        when(carListingImageService.createImages(additionalImageDtos)).thenReturn(additionalImages);
 
-        when(carMapper.toRegisterCarResponseDto(any(CarListing.class), any(Car.class), any(Model.class))).thenReturn(testRegisterCarResponseDto);
+        when(carMapper.toRegisterCarResponseDto(testCarListing, testCar, testModel)).thenReturn(testRegisterCarResponseDto);
 
         // when
         RegisterCarResponseDto result = carFacadeDummyServiceImpl.registerCar(testRegisterCarDummyRequestDto, userId);
@@ -360,7 +360,7 @@ class CarFacadeDummyServiceImplTest {
 
     @Test
     @DisplayName("차량 판매등록 시 판매자 정보가 존재하지 않을 경우 Not Found 반환하는지 테스트")
-    void registerCarShouldReturnNotFoundWhenSellerDoesNotExistTest() {
+    void shouldThrowNotFoundWhenSellerDoesNotExist() {
 
         // given
         String nonExistentSellerUserId = RandomUtils.createUuid(32);
@@ -371,7 +371,7 @@ class CarFacadeDummyServiceImplTest {
         when(carDummyDataGenerator.generateModelDto()).thenReturn(modelDto);
         when(modelService.createModel(modelDto)).thenReturn(testModel);
 
-        when(carDummyDataGenerator.generateCarDto(eq(testModel.getId()), any(String.class))).thenReturn(carDto);
+        when(carDummyDataGenerator.generateCarDto(testModel.getId(), testCar.getCarNumber())).thenReturn(carDto);
         when(carService.createCar(carDto)).thenReturn(testCar);
 
         NotFoundException exception = assertThrows(NotFoundException.class,
@@ -383,7 +383,7 @@ class CarFacadeDummyServiceImplTest {
         verify(carDummyDataGenerator).generateModelDto();
         verify(modelService).createModel(modelDto);
 
-        verify(carDummyDataGenerator).generateCarDto(eq(testModel.getId()), any(String.class));
+        verify(carDummyDataGenerator).generateCarDto(testModel.getId(), testCar.getCarNumber());
         verify(carService).createCar(carDto);
 
         verify(userRepository).findByUserId(nonExistentSellerUserId);
