@@ -110,7 +110,7 @@ class CarListingRepositoryCustomImplTest {
 
     @Test
     @DisplayName("판매중인 차량 목록 조회 테스트")
-    void getCarListTest() {
+    void getCarList() {
 
         // when
         List<CarListResponseDto> result = carListingRepository.getCarList();
@@ -129,7 +129,7 @@ class CarListingRepositoryCustomImplTest {
 
     @Test
     @DisplayName("판매중인 차량 목록 조회 시 N+1 문제 없이 한 번의 쿼리로 조회되는지 테스트")
-    void getCarListFetchedWithSingleQueryTest() {
+    void shouldFetchCarListWithSingleQuery() {
 
         // when
         carListingRepository.getCarList();
@@ -141,7 +141,7 @@ class CarListingRepositoryCustomImplTest {
 
     @Test
     @DisplayName("판매중인 차량이 없을 경우 빈 ArrayList 반환하는지 테스트")
-    void getCarListShouldReturnEmptyArrayListWhenNoDataExistsTest() {
+    void shouldReturnEmptyArrayListWhenNoDataExists() {
 
         // given
         em.createQuery("DELETE FROM CarListingImage").executeUpdate();
@@ -159,7 +159,7 @@ class CarListingRepositoryCustomImplTest {
 
     @Test
     @DisplayName("차량 상세정보 조회 테스트")
-    void getCarDetailByIdTest() {
+    void getCarDetailById() {
 
         // when
         Optional<CarDetailFetchResult> optionalResult = carListingRepository.getCarDetailById(testCarListing.getId());
@@ -178,7 +178,7 @@ class CarListingRepositoryCustomImplTest {
 
     @Test
     @DisplayName("차량 상세정보 조회 시 의도된 횟수(8회)만큼의 쿼리로 조회되는지 테스트")
-    void getCarDetailByIdShouldExecuteExpectedNumberOfQueriesTest() {
+    void ShouldExecuteExpectedNumberOfQueries() {
 
         // when
         carListingRepository.getCarDetailById(testCarListing.getId());
@@ -189,8 +189,8 @@ class CarListingRepositoryCustomImplTest {
     }
 
     @Test
-    @DisplayName("존재하지 않는 차량 상세정보 조회 시 빈 Optional 반환하는지 테스트")
-    void getCarDetailByIdNotFoundTest() {
+    @DisplayName("차량 상세정보 조회 시 데이터가 없을 경우 빈 Optional 반환하는지 테스트")
+    void shouldReturnEmptyOptionalWhenCarDetailDoesNotExist() {
 
         // when
         Optional<CarDetailFetchResult> result = carListingRepository.getCarDetailById(99999L);
