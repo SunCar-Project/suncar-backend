@@ -1,5 +1,6 @@
 package com.yangsunkue.suncar.service.facade;
 
+import com.yangsunkue.suncar.common.constant.ErrorMessages;
 import com.yangsunkue.suncar.dto.car.*;
 import com.yangsunkue.suncar.dto.car.request.RegisterCarDummyRequestDto;
 import com.yangsunkue.suncar.dto.car.response.CarDetailResponseDto;
@@ -8,10 +9,12 @@ import com.yangsunkue.suncar.dto.car.response.RegisterCarResponseDto;
 import com.yangsunkue.suncar.dto.repository.CarDetailFetchResult;
 import com.yangsunkue.suncar.entity.car.*;
 import com.yangsunkue.suncar.entity.user.User;
+import com.yangsunkue.suncar.exception.NotFoundException;
 import com.yangsunkue.suncar.mapper.CarMapper;
 import com.yangsunkue.suncar.repository.car.CarListingRepository;
 import com.yangsunkue.suncar.repository.user.UserRepository;
 import com.yangsunkue.suncar.service.car.*;
+import com.yangsunkue.suncar.util.RandomUtils;
 import com.yangsunkue.suncar.util.factory.TestCarDtoFactory;
 import com.yangsunkue.suncar.util.CarDummyDataGenerator;
 import com.yangsunkue.suncar.util.factory.TestCarFactory;
@@ -27,6 +30,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.math.BigDecimal;
 import java.util.*;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -218,13 +222,13 @@ class CarFacadeDummyServiceImplTest {
         List<CarListResponseDto> result = carFacadeDummyServiceImpl.getCarList();
 
         // then
-        verify(carListingService).getCarList();
-
         assertThat(result).hasSize(testCarListResponseDtos.size());
         assertThat(result.get(0).getCarListingId()).isEqualTo(testCarListing.getId());
         assertThat(result.get(0))
                 .usingRecursiveComparison()
                 .isEqualTo(testCarListResponseDtos.get(0));
+
+        verify(carListingService).getCarList();
     }
 
     @Test
@@ -241,15 +245,34 @@ class CarFacadeDummyServiceImplTest {
         CarDetailResponseDto result = carFacadeDummyServiceImpl.getCarDetail(listingId);
 
         // then
-        verify(carListingRepository).getCarDetailById(listingId);
-        verify(carMapper).toCarDetailResponseDto(any(CarListing.class));
-
         assertThat(result.getId()).isEqualTo(testCarListing.getId());
         assertThat(result.getCarId()).isEqualTo(testCar.getId());
         assertThat(result.getSellerId()).isEqualTo(testUser.getId());
         assertThat(result)
                 .usingRecursiveComparison()
                 .isEqualTo(testCarDetailResponseDto);
+
+        verify(carListingRepository).getCarDetailById(listingId);
+        verify(carMapper).toCarDetailResponseDto(any(CarListing.class));
+    }
+
+    @Test
+    @DisplayName("판매 차량 상세정보 조회 시 데이터가 존재하지 않을 경우 Not Found 반환하는지 테스트")
+    void getCarDetailShouldReturnNotFoundWhenCarListingDoesNotExistTest() {
+
+        // given
+        Long nonExistentListingId = 99999L;
+        when(carListingRepository.getCarDetailById(nonExistentListingId)).thenReturn(Optional.empty());
+
+        // when
+        NotFoundException exception = assertThrows(NotFoundException.class,
+                () -> carFacadeDummyServiceImpl.getCarDetail(nonExistentListingId));
+
+        // then
+        assertThat(exception.getMessage()).isEqualTo(ErrorMessages.CAR_LISTING_NOT_FOUND);
+
+        verify(carListingRepository).getCarDetailById(nonExistentListingId);
+        verify(carMapper, never()).toCarDetailResponseDto(any());
     }
 
     @Test
@@ -325,13 +348,45 @@ class CarFacadeDummyServiceImplTest {
         RegisterCarResponseDto result = carFacadeDummyServiceImpl.registerCar(testRegisterCarDummyRequestDto, userId);
 
         // then
-        verify(userRepository).findByUserId(userId);
-        verify(carMapper).toRegisterCarResponseDto(any(CarListing.class), any(Car.class), any(Model.class));
-
         assertThat(result.getListingId()).isEqualTo(testCarListing.getId());
         assertThat(result.getPrice()).isEqualTo(testCarListing.getPrice());
         assertThat(result)
                 .usingRecursiveComparison()
                 .isEqualTo(testRegisterCarResponseDto);
+
+        verify(userRepository).findByUserId(userId);
+        verify(carMapper).toRegisterCarResponseDto(any(CarListing.class), any(Car.class), any(Model.class));
+    }
+
+    @Test
+    @DisplayName("차량 판매등록 시 판매자 정보가 존재하지 않을 경우 Not Found 반환하는지 테스트")
+    void registerCarShouldReturnNotFoundWhenSellerDoesNotExistTest() {
+
+        // given
+        String nonExistentSellerUserId = RandomUtils.createUuid(32);
+        ModelDto modelDto = TestCarDtoFactory.createModelDto();
+        CarDto carDto = TestCarDtoFactory.createCarDto();
+
+        // when
+        when(carDummyDataGenerator.generateModelDto()).thenReturn(modelDto);
+        when(modelService.createModel(modelDto)).thenReturn(testModel);
+
+        when(carDummyDataGenerator.generateCarDto(eq(testModel.getId()), any(String.class))).thenReturn(carDto);
+        when(carService.createCar(carDto)).thenReturn(testCar);
+
+        NotFoundException exception = assertThrows(NotFoundException.class,
+                () -> carFacadeDummyServiceImpl.registerCar(testRegisterCarDummyRequestDto, nonExistentSellerUserId));
+
+        // then
+        assertThat(exception.getMessage()).isEqualTo(ErrorMessages.USER_NOT_FOUND);
+
+        verify(carDummyDataGenerator).generateModelDto();
+        verify(modelService).createModel(modelDto);
+
+        verify(carDummyDataGenerator).generateCarDto(eq(testModel.getId()), any(String.class));
+        verify(carService).createCar(carDto);
+
+        verify(userRepository).findByUserId(nonExistentSellerUserId);
+        verify(carDummyDataGenerator, never()).generateCarListingDto(anyLong(), anyLong(), any(BigDecimal.class));
     }
 }
