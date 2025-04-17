@@ -14,7 +14,7 @@ import org.hibernate.annotations.SQLDelete;
 @SQLDelete(sql = "UPDATE car_option SET is_deleted = true WHERE id = ?")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder
+@Builder(toBuilder = true)
 @Getter
 public class CarOption extends BaseEntity {
 

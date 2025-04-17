@@ -111,10 +111,6 @@ public class CarFacadeDummyServiceImpl implements CarFacadeDummyService {
         CarDto carDto = carDummyDataGenerator.generateCarDto(model.getId(), dto.getCarNumber());
         Car car = carService.createCar(carDto);
 
-        /** CarAccident */
-        List<CarAccidentDto> accidentDtos = carDummyDataGenerator.generateCarAccidentDtos(car.getId());
-        List<CarAccident> accidents = carAccidentService.createAccidents(accidentDtos);
-
         /**
          * CarListing
          * - 차량 등록 요청자 id를 인자로 전달
@@ -125,6 +121,10 @@ public class CarFacadeDummyServiceImpl implements CarFacadeDummyService {
 
         CarListingDto listingDto = carDummyDataGenerator.generateCarListingDto(car.getId(), userPrimaryId, dto.getPrice());
         CarListing listing = carListingService.createListing(listingDto);
+
+        /** CarAccident */
+        List<CarAccidentDto> accidentDtos = carDummyDataGenerator.generateCarAccidentDtos(car.getId());
+        List<CarAccident> accidents = carAccidentService.createAccidents(accidentDtos);
 
         /**
          * CarAccidentRepair

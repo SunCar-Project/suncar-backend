@@ -29,7 +29,6 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
 	// Spring Security
@@ -60,6 +59,15 @@ dependencies {
 	implementation 'org.mapstruct:mapstruct:1.5.5.Final'
 	annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
 	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+
+	// Test Code
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testImplementation 'org.mockito:mockito-core'
+	testImplementation 'org.junit.jupiter:junit-jupiter-api'
+	testImplementation 'com.h2database:h2'
+	testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+
+
 }
 
 // Querydsl 설정

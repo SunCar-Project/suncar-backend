@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @SQLDelete(sql = "UPDATE car_mileage SET is_deleted = true WHERE id = ?")
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Builder
+@Builder(toBuilder = true)
 @Getter
 public class CarMileage extends BaseEntity {
 

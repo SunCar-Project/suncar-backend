@@ -9,7 +9,9 @@ import lombok.*;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@Setter
 @ToString
+@Builder
 public class SignUpRequestDto {
 
     private String userId;
