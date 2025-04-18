@@ -20,4 +20,5 @@ public class ErrorMessages {
     public static final String IMAGE_NOT_PRIMARY = "메인 이미지 생성 요청에는 isPrimary가 true 여야 합니다.";
     public static final String PRIMARY_IMAGES_NOT_ALLOWED = "일반 이미지 생성 요청에는 isPrimary가 false 여야 합니다.";
     public static final String CAR_LISTING_NOT_FOUND = "판매 등록된 차량 정보를 찾을 수 없습니다.";
+    public static final String NOT_OWNER_OF_CAR_LISTING = "본인의 차량이 아닙니다.";
 }

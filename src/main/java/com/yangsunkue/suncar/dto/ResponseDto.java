@@ -1,5 +1,6 @@
 package com.yangsunkue.suncar.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,6 +16,7 @@ import lombok.Getter;
 public class ResponseDto<T> {
 
     private String message;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private T data;
 
     // 데이터가 없는 경우 -> 메시지만 리턴

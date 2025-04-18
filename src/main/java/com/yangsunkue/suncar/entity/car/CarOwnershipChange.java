@@ -1,5 +1,6 @@
 package com.yangsunkue.suncar.entity.car;
 
+import com.yangsunkue.suncar.entity.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
@@ -16,7 +17,7 @@ import java.time.LocalDate;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Builder(toBuilder = true)
 @Getter
-public class CarOwnershipChange {
+public class CarOwnershipChange extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

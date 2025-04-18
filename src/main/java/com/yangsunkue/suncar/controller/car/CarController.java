@@ -2,11 +2,16 @@ package com.yangsunkue.suncar.controller.car;
 
 import com.yangsunkue.suncar.common.constant.ResponseMessages;
 import com.yangsunkue.suncar.dto.ResponseDto;
+import com.yangsunkue.suncar.dto.car.request.UpdateCarListingRequestDto;
 import com.yangsunkue.suncar.dto.car.request.RegisterCarDummyRequestDto;
 import com.yangsunkue.suncar.dto.car.response.CarDetailResponseDto;
 import com.yangsunkue.suncar.dto.car.response.CarListResponseDto;
 import com.yangsunkue.suncar.dto.car.response.RegisterCarResponseDto;
+import com.yangsunkue.suncar.dto.car.response.UpdateCarListingResponseDto;
+import com.yangsunkue.suncar.entity.car.CarListing;
 import com.yangsunkue.suncar.security.CustomUserDetails;
+import com.yangsunkue.suncar.service.car.CarListingService;
+import com.yangsunkue.suncar.service.car.CarListingServiceImpl;
 import com.yangsunkue.suncar.service.facade.CarFacadeDummyService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -37,6 +42,7 @@ public class CarController {
      * 카히스토리 API 및 S3 도입 후, CarFacadeService 로 교체
      */
     private final CarFacadeDummyService carFacadeDummyService;
+    private final CarListingService carListingService;
 
     /**
      * 판매중인 차량 목록을 조회합니다.
@@ -101,5 +107,36 @@ public class CarController {
     public ResponseDto<CarDetailResponseDto> getCarDetail(@PathVariable Long listingId) {
         CarDetailResponseDto carDetail = carFacadeDummyService.getCarDetail(listingId);
         return ResponseDto.of(ResponseMessages.CAR_DETAIL_RETRIEVED, carDetail);
+    }
+
+    /**
+     * 판매중인 차량 가격, 설명을 수정합니다.
+     * 본인이 등록한 차량만 수정할 수 있습니다.
+     */
+    @PatchMapping("/{listingId}")
+    @SecurityRequirement(name = "bearer-jwt")
+    @Operation(summary = "판매 차량 상세정보 수정")
+    public ResponseDto<UpdateCarListingResponseDto> updateCarDetail(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @PathVariable Long listingId,
+            @RequestBody UpdateCarListingRequestDto dto
+    ) {
+        UpdateCarListingResponseDto updated = carListingService.updatePriceAndDesc(listingId, userDetails.getUserId(), dto);
+        return ResponseDto.of(ResponseMessages.CAR_DETAIL_UPDATED, updated);
+    }
+
+    /**
+     * 판매중인 차량 정보를 모두 삭제합니다.
+     * 본인이 등록한 차량만 삭제할 수 있습니다.
+     */
+    @DeleteMapping("/{listingId}")
+    @SecurityRequirement(name = "bearer-jwt")
+    @Operation(summary = "판매 차량 삭제")
+    public ResponseDto deleteCarListing(
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            @PathVariable Long listingId
+    ) {
+        carListingService.softDeleteCarListingWithRelatedEntities(listingId, userDetails.getUserId());
+        return ResponseDto.of(ResponseMessages.CAR_LISTING_DELETED);
     }
 }

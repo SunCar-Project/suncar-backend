@@ -2,13 +2,14 @@ package com.yangsunkue.suncar.dto.car;
 
 import com.yangsunkue.suncar.common.enums.CarListingStatus;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-@Builder
+@SuperBuilder
 public class CarListingDto {
 
     private Long carId;

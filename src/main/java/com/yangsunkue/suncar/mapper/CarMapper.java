@@ -3,6 +3,7 @@ package com.yangsunkue.suncar.mapper;
 import com.yangsunkue.suncar.dto.car.*;
 import com.yangsunkue.suncar.dto.car.response.CarDetailResponseDto;
 import com.yangsunkue.suncar.dto.car.response.RegisterCarResponseDto;
+import com.yangsunkue.suncar.dto.car.response.UpdateCarListingResponseDto;
 import com.yangsunkue.suncar.entity.car.*;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -130,4 +131,8 @@ public interface CarMapper {
 
     @Mapping(target = "carId", ignore = true)
     CarUsageDto toCarUsageDto(CarUsage usage);
+
+    @Mapping(source = "car.id", target = "carId")
+    @Mapping(source = "user.id", target = "sellerId")
+    UpdateCarListingResponseDto toUpdateCarListingResponseDto(CarListing carListing);
 }
