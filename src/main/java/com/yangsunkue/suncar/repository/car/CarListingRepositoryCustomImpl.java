@@ -9,6 +9,7 @@ import com.yangsunkue.suncar.entity.car.*;
 import com.yangsunkue.suncar.entity.user.QUser;
 import com.yangsunkue.suncar.repository.support.Querydsl4RepositorySupport;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -221,5 +222,114 @@ public class CarListingRepositoryCustomImpl extends Querydsl4RepositorySupport i
                 ownershipChanges,
                 usage
         ));
+    }
+
+    /**
+     * 판매중인 차량을 soft delete 방식으로 삭제합니다.
+     * CarListing 엔티티를 시작으로, 연관된 모든 엔티티를 함께 삭제합니다.
+     */
+    @Override
+    @Transactional
+    public void softDeleteCarListingWithRelatedEntities(Long listingId) {
+
+        QCarListing carListing = QCarListing.carListing;
+        QCarListingImage carListingImage = QCarListingImage.carListingImage;
+        QCar car = QCar.car;
+        QCarAccident carAccident = QCarAccident.carAccident;
+        QCarAccidentRepair carAccidentRepair = QCarAccidentRepair.carAccidentRepair;
+        QCarMileage carMileage = QCarMileage.carMileage;
+        QCarOption carOption = QCarOption.carOption;
+        QCarOwnershipChange carOwnershipChange = QCarOwnershipChange.carOwnershipChange;
+        QCarUsage carUsage = QCarUsage.carUsage;
+
+        /** 0. car.id 가져오기 */
+        Long carId = getQueryFactory()
+                .select(carListing.car.id)
+                .from(carListing)
+                .where(carListing.id.eq(listingId)
+                        .and(carListing.isDeleted.eq(false)))
+                .fetchOne();
+
+        if (carId == null) {
+            return;
+        }
+
+        /** 1. CarListingImage 삭제 */
+        getQueryFactory()
+                .update(carListingImage)
+                .set(carListingImage.isDeleted, true)
+                .where(carListingImage.carListing.id.eq(listingId)
+                        .and(carListingImage.isDeleted.eq(false)))
+                .execute();
+
+        /** 2. CarAccidentRepair 삭제 */
+        getQueryFactory()
+                .update(carAccidentRepair)
+                .set(carAccidentRepair.isDeleted, true)
+                .where(carAccidentRepair.carAccident.id.in(
+                        JPAExpressions
+                                .select(carAccident.id)
+                                .from(carAccident)
+                                .where(carAccident.car.id.eq(carId)
+                                        .and(carAccident.isDeleted.eq(false)))
+                        )
+                        .and(carAccidentRepair.isDeleted.eq(false)))
+                .execute();
+
+        /** 3. CarAccident 삭제 */
+        getQueryFactory()
+                .update(carAccident)
+                .set(carAccident.isDeleted, true)
+                .where(carAccident.car.id.eq(carId)
+                        .and(carAccident.isDeleted.eq(false)))
+                .execute();
+
+        /** 4. CarMileage 삭제 */
+        getQueryFactory()
+                .update(carMileage)
+                .set(carMileage.isDeleted, true)
+                .where(carMileage.car.id.eq(carId)
+                        .and(carMileage.isDeleted.eq(false)))
+                .execute();
+
+        /** 5. CarOption 삭제 */
+        getQueryFactory()
+                .update(carOption)
+                .set(carOption.isDeleted, true)
+                .where(carOption.car.id.eq(carId)
+                        .and(carOption.isDeleted.eq(false)))
+                .execute();
+
+        /** 6. CarOwnershipChange 삭제 */
+        getQueryFactory()
+                .update(carOwnershipChange)
+                .set(carOwnershipChange.isDeleted, true)
+                .where(carOwnershipChange.car.id.eq(carId)
+                        .and(carOwnershipChange.isDeleted.eq(false)))
+                .execute();
+
+        /** 7. CarUsage 삭제 */
+        getQueryFactory()
+                .update(carUsage)
+                .set(carUsage.isDeleted, true)
+                .where(carUsage.car.id.eq(carId)
+                        .and(carUsage.isDeleted.eq(false)))
+                .execute();
+
+        /** 8. CarListing 삭제 */
+        getQueryFactory()
+                .update(carListing)
+                .set(carListing.isDeleted, true)
+                .where(carListing.id.eq(listingId)
+                        .and(carListing.isDeleted.eq(false)))
+                .execute();
+
+        /** 9. Car 삭제 */
+        getQueryFactory()
+                .update(car)
+                .set(car.isDeleted, true)
+                .where(car.id.eq(carId)
+                        .and(car.isDeleted.eq(false)))
+                .execute();
     }
 }

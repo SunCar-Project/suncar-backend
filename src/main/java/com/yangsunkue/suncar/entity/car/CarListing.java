@@ -1,6 +1,7 @@
 package com.yangsunkue.suncar.entity.car;
 
 import com.yangsunkue.suncar.common.enums.CarListingStatus;
+import com.yangsunkue.suncar.dto.car.request.UpdateCarListingRequestDto;
 import com.yangsunkue.suncar.entity.BaseEntity;
 import com.yangsunkue.suncar.entity.user.User;
 import jakarta.persistence.*;
@@ -45,4 +46,15 @@ public class CarListing extends BaseEntity {
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
     private CarListingStatus status;
+
+    public void patch(UpdateCarListingRequestDto dto) {
+
+        /** 가격이 음수 또는 0이 아니어야 함 */
+        if (dto.getPrice() != null && (dto.getPrice().compareTo(BigDecimal.ZERO) > 0)) {
+            this.price = dto.getPrice();
+        }
+        if (dto.getDescription() != null && !dto.getDescription().isEmpty()) {
+            this.description = dto.getDescription();
+        }
+    }
 }

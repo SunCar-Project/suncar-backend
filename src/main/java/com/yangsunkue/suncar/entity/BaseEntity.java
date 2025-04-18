@@ -41,7 +41,7 @@ public abstract class BaseEntity {
     /**
      * Soft delete : 삭제를 위한 메서드
      */
-    public void delete() {
+    public void softDelete() {
         this.isDeleted = true;
     }
 
