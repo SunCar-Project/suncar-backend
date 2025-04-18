@@ -87,8 +87,8 @@ public class CarListingRepositoryCustomImpl extends Querydsl4RepositorySupport i
                     JPAExpressions
                             .select(carMileage.id.max())
                             .from(carMileage)
-                            .groupBy(carMileage.car.id)
-            ));
+                            .groupBy(carMileage.car.id))
+                    .and(carListing.isDeleted.eq(false)));
 
         /** sellerId가 제공될 경우 필터링 추가 */
         if (sellerId != null) {
@@ -164,7 +164,8 @@ public class CarListingRepositoryCustomImpl extends Querydsl4RepositorySupport i
                 .join(carListing.car, car).fetchJoin()
                 .join(car.model, model).fetchJoin()
                 .join(carListing.user, user).fetchJoin()
-                .where(carListing.id.eq(listingId))
+                .where(carListing.id.eq(listingId)
+                        .and(carListing.isDeleted.eq(false)))
                 .fetchOne();
 
         if (result == null) {
