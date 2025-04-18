@@ -55,6 +55,29 @@ public class CarController {
     }
 
     /**
+     * 현재 사용자가 판매중인 차량 목록을 조회합니다.
+     */
+    @GetMapping("/me")
+    @SecurityRequirement(name = "bearer-jwt")
+    @Operation(summary = "현재 사용자의 판매 차량 목록 조회")
+    public ResponseDto<List<CarListResponseDto>> getMyCarList(
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
+        List<CarListResponseDto> myCarList = carListingService.getCarListBySellerId(userDetails.getId());
+        return ResponseDto.of(ResponseMessages.MY_CAR_LIST_RETRIEVED, myCarList);
+    }
+
+    /**
+     * 판매 차량 상세정보를 조회합니다.
+     */
+    @GetMapping("/{listingId}")
+    @Operation(summary = "판매 차량 상세정보 조회")
+    public ResponseDto<CarDetailResponseDto> getCarDetail(@PathVariable Long listingId) {
+        CarDetailResponseDto carDetail = carFacadeDummyService.getCarDetail(listingId);
+        return ResponseDto.of(ResponseMessages.CAR_DETAIL_RETRIEVED, carDetail);
+    }
+
+    /**
      * 차량을 판매등록합니다. - 배포용
      */
 //    @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -97,16 +120,6 @@ public class CarController {
 
         return ResponseEntity.created(URI.create("/cars/" + registeredCar.getListingId()))
                 .body(response);
-    }
-
-    /**
-     * 판매 차량 상세정보를 조회합니다.
-     */
-    @GetMapping("/{listingId}")
-    @Operation(summary = "판매 차량 상세정보 조회")
-    public ResponseDto<CarDetailResponseDto> getCarDetail(@PathVariable Long listingId) {
-        CarDetailResponseDto carDetail = carFacadeDummyService.getCarDetail(listingId);
-        return ResponseDto.of(ResponseMessages.CAR_DETAIL_RETRIEVED, carDetail);
     }
 
     /**

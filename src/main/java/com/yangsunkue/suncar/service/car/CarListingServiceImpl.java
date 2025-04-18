@@ -12,6 +12,7 @@ import com.yangsunkue.suncar.exception.NotFoundException;
 import com.yangsunkue.suncar.mapper.CarMapper;
 import com.yangsunkue.suncar.repository.car.CarListingRepository;
 import com.yangsunkue.suncar.repository.user.UserRepository;
+import com.yangsunkue.suncar.security.CustomUserDetails;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,6 +36,15 @@ public class CarListingServiceImpl implements CarListingService {
     @Override
     public List<CarListResponseDto> getCarList() {
         List<CarListResponseDto> carList = carListingRepository.getCarList();
+        return carList;
+    }
+
+    /**
+     * 특정 판매자가 판매하는 차량 목록을 조회합니다.
+     */
+    @Override
+    public List<CarListResponseDto> getCarListBySellerId(Long sellerId) {
+        List<CarListResponseDto> carList = carListingRepository.getCarList(sellerId);
         return carList;
     }
 
