@@ -2,6 +2,7 @@ package com.yangsunkue.suncar.repository.car;
 
 import com.querydsl.core.Tuple;
 import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.yangsunkue.suncar.dto.car.response.CarListResponseDto;
 import com.yangsunkue.suncar.dto.repository.CarDetailFetchResult;
@@ -27,9 +28,19 @@ public class CarListingRepositoryCustomImpl extends Querydsl4RepositorySupport i
 
     /**
      * 모든 판매중인 자동차 정보를 찾습니다.
+     * sellerId 파라미터를 사용하는 getCarList() 메서드의 오버로딩 메서드입니다.
      */
     @Override
     public List<CarListResponseDto> getCarList() {
+        return getCarList(null);
+    }
+
+    /**
+     * 모든 판매중인 자동차 정보를 찾습니다.
+     * sellerId가 제공될 경우 해당 판매자의 차량만 조회합니다.
+     */
+    @Override
+    public List<CarListResponseDto> getCarList(Long sellerId) {
 
         /** 사용할 Q타입 객체 선언 */
         QCarListing carListing = QCarListing.carListing;
@@ -39,7 +50,7 @@ public class CarListingRepositoryCustomImpl extends Querydsl4RepositorySupport i
         QCarListingImage carListingImage = QCarListingImage.carListingImage;
 
         /** 쿼리 제작 */
-        List<Tuple> results = getQueryFactory()
+        JPAQuery<Tuple> query = getQueryFactory()
 
             /** SELECT */
             .select(
@@ -77,8 +88,15 @@ public class CarListingRepositoryCustomImpl extends Querydsl4RepositorySupport i
                             .select(carMileage.id.max())
                             .from(carMileage)
                             .groupBy(carMileage.car.id)
-            ))
-            .fetch();
+            ));
+
+        /** sellerId가 제공될 경우 필터링 추가 */
+        if (sellerId != null) {
+            query = query.where(carListing.user.id.eq(sellerId));
+        }
+
+        /** 쿼리 실행 */
+        List<Tuple> results = query.fetch();
 
         /** carListingId 기준으로 그룹화, DTO로 변환 */
         Map<Long, CarListResponseDto> dtoMap = new HashMap<>();

@@ -5,6 +5,7 @@ import com.yangsunkue.suncar.dto.car.request.UpdateCarListingRequestDto;
 import com.yangsunkue.suncar.dto.car.response.CarListResponseDto;
 import com.yangsunkue.suncar.dto.car.response.UpdateCarListingResponseDto;
 import com.yangsunkue.suncar.entity.car.CarListing;
+import com.yangsunkue.suncar.security.CustomUserDetails;
 
 import java.util.List;
 
@@ -17,6 +18,11 @@ public interface CarListingService {
      * 판매중인 차량 목록을 조회합니다.
      */
     List<CarListResponseDto> getCarList();
+
+    /**
+     * 특정 판매자가 판매하는 차량 목록을 조회합니다.
+     */
+    List<CarListResponseDto> getCarListBySellerId(Long sellerId);
 
     /**
      * 차량 판매등록 정보를 생성합니다.

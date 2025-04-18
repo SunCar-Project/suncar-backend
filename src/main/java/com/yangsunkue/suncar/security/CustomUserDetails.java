@@ -19,6 +19,7 @@ import java.util.Collections;
 @ToString
 public class CustomUserDetails implements UserDetails {
 
+    private final Long id; // DB 레벨 아이디
     private final String userId; // 로그인 아이디
     private final String username; // 사용자 이름
     private final String password;
