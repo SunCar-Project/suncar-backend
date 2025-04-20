@@ -12,5 +12,5 @@ public interface CarFacadeDummyService extends CarFacadeBaseService {
     /**
      * 차량을 판매등록합니다. - 더미 데이터 입력을 위한 메서드 입니다.
      */
-    RegisterCarResponseDto registerCar(RegisterCarDummyRequestDto dto, String userId);
+    RegisterCarResponseDto registerCar(RegisterCarDummyRequestDto dto, Long userId);
 }

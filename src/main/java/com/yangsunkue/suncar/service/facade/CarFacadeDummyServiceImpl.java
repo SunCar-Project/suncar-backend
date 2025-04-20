@@ -36,9 +36,6 @@ public class CarFacadeDummyServiceImpl implements CarFacadeDummyService {
     private final CarDummyDataGenerator carDummyDataGenerator;
     private final CarMapper carMapper;
 
-    private final UserRepository userRepository;
-    private final CarListingRepository carListingRepository;
-
     /** Car 관련 서비스 */
     private final ModelService modelService;
     private final CarService carService;
@@ -67,11 +64,10 @@ public class CarFacadeDummyServiceImpl implements CarFacadeDummyService {
      * @param listingId 차량 판매등록 ID
      */
     @Override
-    public CarDetailResponseDto getCarDetail(Long listingId) {
+    public CarDetailResponseDto getCarDetailById(Long listingId) {
 
         /** 차량 상세정보 엔티티들 조회 */
-        CarDetailFetchResult data = carListingRepository.getCarDetailById(listingId)
-                .orElseThrow(() -> new NotFoundException(ErrorMessages.CAR_LISTING_NOT_FOUND));
+        CarDetailFetchResult data = carListingService.getCarDetailById(listingId);
 
         /** DTO로 변환 */
         CarDetailResponseDto carDetail = carMapper.toCarDetailResponseDto(data.carListing());
@@ -97,7 +93,7 @@ public class CarFacadeDummyServiceImpl implements CarFacadeDummyService {
      */
     @Override
     @Transactional
-    public RegisterCarResponseDto registerCar(RegisterCarDummyRequestDto dto, String userId) {
+    public RegisterCarResponseDto registerCar(RegisterCarDummyRequestDto dto, Long userId) {
 
         /**
          * 각 엔티티마다 더미 데이터 생성 후 DB에 저장
@@ -115,11 +111,7 @@ public class CarFacadeDummyServiceImpl implements CarFacadeDummyService {
          * CarListing
          * - 차량 등록 요청자 id를 인자로 전달
          */
-        User user = userRepository.findByUserId(userId)
-                .orElseThrow(() -> new NotFoundException(ErrorMessages.USER_NOT_FOUND));
-        Long userPrimaryId = user.getId();
-
-        CarListingDto listingDto = carDummyDataGenerator.generateCarListingDto(car.getId(), userPrimaryId, dto.getPrice());
+        CarListingDto listingDto = carDummyDataGenerator.generateCarListingDto(car.getId(), userId, dto.getPrice());
         CarListing listing = carListingService.createListing(listingDto);
 
         /** CarAccident */

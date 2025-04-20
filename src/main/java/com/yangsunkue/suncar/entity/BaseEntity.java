@@ -7,6 +7,9 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
 import org.hibernate.annotations.SQLRestriction;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -21,7 +24,6 @@ import java.time.LocalDateTime;
  */
 @EntityListeners(AuditingEntityListener.class) // 엔티티 생성/수정 시간을 관리하는 리스너
 @MappedSuperclass // 이 클래스를 상속받은 엔티티들에게, DB 매핑정보를 제공하는 상위 클래스임을 나타낸다.
-@SQLRestriction("is_deleted = false") // 조회 시 삭제되지 않은 컬럼을 찾는 조건 추가
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
