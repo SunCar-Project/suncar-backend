@@ -6,6 +6,9 @@ import com.yangsunkue.suncar.entity.BaseEntity;
 import com.yangsunkue.suncar.entity.user.User;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Filter;
+import org.hibernate.annotations.FilterDef;
+import org.hibernate.annotations.ParamDef;
 import org.hibernate.annotations.SQLDelete;
 
 import java.math.BigDecimal;

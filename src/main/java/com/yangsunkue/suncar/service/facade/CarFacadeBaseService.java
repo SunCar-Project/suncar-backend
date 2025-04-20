@@ -18,5 +18,5 @@ public interface CarFacadeBaseService {
     /**
      * 판매 차량 상세정보를 조회합니다.
      */
-    CarDetailResponseDto getCarDetail(Long listingId);
+    CarDetailResponseDto getCarDetailById(Long listingId);
 }

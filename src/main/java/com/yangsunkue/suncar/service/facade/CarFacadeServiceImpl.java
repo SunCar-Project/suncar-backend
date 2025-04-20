@@ -49,11 +49,10 @@ public class CarFacadeServiceImpl implements CarFacadeService {
      * @param listingId 차량 판매등록 ID
      */
     @Override
-    public CarDetailResponseDto getCarDetail(Long listingId) {
+    public CarDetailResponseDto getCarDetailById(Long listingId) {
 
         /** 차량 상세정보 엔티티들 조회 */
-        CarDetailFetchResult data = carListingRepository.getCarDetailById(listingId)
-                .orElseThrow(() -> new NotFoundException(ErrorMessages.CAR_LISTING_NOT_FOUND));
+        CarDetailFetchResult data = carListingService.getCarDetailById(listingId);
 
         /** DTO로 변환 */
         CarDetailResponseDto carDetail = carMapper.toCarDetailResponseDto(data.carListing());

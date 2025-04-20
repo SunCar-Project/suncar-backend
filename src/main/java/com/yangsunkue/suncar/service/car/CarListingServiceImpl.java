@@ -3,8 +3,10 @@ package com.yangsunkue.suncar.service.car;
 import com.yangsunkue.suncar.common.constant.ErrorMessages;
 import com.yangsunkue.suncar.dto.car.CarListingDto;
 import com.yangsunkue.suncar.dto.car.request.UpdateCarListingRequestDto;
+import com.yangsunkue.suncar.dto.car.response.CarDetailResponseDto;
 import com.yangsunkue.suncar.dto.car.response.CarListResponseDto;
 import com.yangsunkue.suncar.dto.car.response.UpdateCarListingResponseDto;
+import com.yangsunkue.suncar.dto.repository.CarDetailFetchResult;
 import com.yangsunkue.suncar.entity.car.CarListing;
 import com.yangsunkue.suncar.entity.user.User;
 import com.yangsunkue.suncar.exception.ForbiddenException;
@@ -49,6 +51,19 @@ public class CarListingServiceImpl implements CarListingService {
     }
 
     /**
+     * 판매 차량 상세정보를 조회합니다.
+     * QueryDSL을 사용하여 데이터를 가져온 후, Facade 서비스에서 매퍼를 통해 DTO로 변환됩니다.
+     *
+     * @param listingId 차량 판매등록 ID
+     */
+    @Override
+    public CarDetailFetchResult getCarDetailById(Long listingId) {
+        CarDetailFetchResult data = carListingRepository.getCarDetailById(listingId)
+                .orElseThrow(() -> new NotFoundException(ErrorMessages.CAR_LISTING_NOT_FOUND));
+        return data;
+    }
+
+    /**
      * 차량 판매등록 정보를 생성합니다.
      */
     @Override
@@ -72,7 +87,7 @@ public class CarListingServiceImpl implements CarListingService {
     @Transactional
     public UpdateCarListingResponseDto updatePriceAndDesc(
             Long listingId,
-            String userId,
+            Long userId,
             UpdateCarListingRequestDto dto
     ) {
 
@@ -81,7 +96,7 @@ public class CarListingServiceImpl implements CarListingService {
                 .orElseThrow(() -> new NotFoundException(ErrorMessages.CAR_LISTING_NOT_FOUND));
 
         /** 본인의 차량인지 확인 */
-        if (!target.getUser().getUserId().equals(userId)) {
+        if (!target.getUser().getId().equals(userId)) {
             throw new ForbiddenException(ErrorMessages.NOT_OWNER_OF_CAR_LISTING);
         }
 
@@ -104,15 +119,15 @@ public class CarListingServiceImpl implements CarListingService {
     @Transactional
     public void softDeleteCarListingWithRelatedEntities(
             Long listingId,
-            String userId
+            Long userId
     ) {
 
-        /** 수정할 차량 찾기  */
+        /** 삭제할 차량 찾기  */
         CarListing target = carListingRepository.findById(listingId)
                 .orElseThrow(() -> new NotFoundException(ErrorMessages.CAR_LISTING_NOT_FOUND));
 
         /** 본인의 차량인지 확인 */
-        if (!target.getUser().getUserId().equals(userId)) {
+        if (!target.getUser().getId().equals(userId)) {
             throw new ForbiddenException(ErrorMessages.NOT_OWNER_OF_CAR_LISTING);
         }
 

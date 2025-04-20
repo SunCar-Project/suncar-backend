@@ -26,10 +26,10 @@ public class UserServiceImpl implements UserService{
     @Override
     @Transactional
     public UserProfileResponseDto updateCurrentUserProfile(
-            CustomUserDetails userDetails,
+            Long userId,
             UserProfileUpdateRequestDto dto
     ) {
-        User currentUser = userRepository.findByUserId(userDetails.getUserId())
+        User currentUser = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(ErrorMessages.USER_NOT_FOUND));
 
         // 사용자 정보 수정

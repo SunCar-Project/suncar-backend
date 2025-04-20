@@ -73,7 +73,7 @@ public class CarController {
     @GetMapping("/{listingId}")
     @Operation(summary = "판매 차량 상세정보 조회")
     public ResponseDto<CarDetailResponseDto> getCarDetail(@PathVariable Long listingId) {
-        CarDetailResponseDto carDetail = carFacadeDummyService.getCarDetail(listingId);
+        CarDetailResponseDto carDetail = carFacadeDummyService.getCarDetailById(listingId);
         return ResponseDto.of(ResponseMessages.CAR_DETAIL_RETRIEVED, carDetail);
     }
 
@@ -115,7 +115,7 @@ public class CarController {
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestBody RegisterCarDummyRequestDto dto
     ) {
-        RegisterCarResponseDto registeredCar = carFacadeDummyService.registerCar(dto, userDetails.getUserId());
+        RegisterCarResponseDto registeredCar = carFacadeDummyService.registerCar(dto, userDetails.getId());
         ResponseDto<RegisterCarResponseDto> response = ResponseDto.of(ResponseMessages.CAR_REGISTERED, registeredCar);
 
         return ResponseEntity.created(URI.create("/cars/" + registeredCar.getListingId()))
@@ -134,7 +134,7 @@ public class CarController {
             @PathVariable Long listingId,
             @RequestBody UpdateCarListingRequestDto dto
     ) {
-        UpdateCarListingResponseDto updated = carListingService.updatePriceAndDesc(listingId, userDetails.getUserId(), dto);
+        UpdateCarListingResponseDto updated = carListingService.updatePriceAndDesc(listingId, userDetails.getId(), dto);
         return ResponseDto.of(ResponseMessages.CAR_DETAIL_UPDATED, updated);
     }
 
@@ -149,7 +149,7 @@ public class CarController {
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @PathVariable Long listingId
     ) {
-        carListingService.softDeleteCarListingWithRelatedEntities(listingId, userDetails.getUserId());
+        carListingService.softDeleteCarListingWithRelatedEntities(listingId, userDetails.getId());
         return ResponseDto.of(ResponseMessages.CAR_LISTING_DELETED);
     }
 }

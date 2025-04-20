@@ -134,5 +134,6 @@ public interface CarMapper {
 
     @Mapping(source = "car.id", target = "carId")
     @Mapping(source = "user.id", target = "sellerId")
+    @Mapping(source = "id", target = "listingId")
     UpdateCarListingResponseDto toUpdateCarListingResponseDto(CarListing carListing);
 }

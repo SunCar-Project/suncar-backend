@@ -50,7 +50,7 @@ public class UserController {
             @AuthenticationPrincipal CustomUserDetails userDetails,
             @RequestBody UserProfileUpdateRequestDto dto
     ) {
-        UserProfileResponseDto updatedProfile = userService.updateCurrentUserProfile(userDetails, dto);
+        UserProfileResponseDto updatedProfile = userService.updateCurrentUserProfile(userDetails.getId(), dto);
         return ResponseDto.of(ResponseMessages.USER_PROFILE_UPDATED, updatedProfile);
     }
 }
