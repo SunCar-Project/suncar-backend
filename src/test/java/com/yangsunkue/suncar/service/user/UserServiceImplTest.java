@@ -7,8 +7,7 @@ import com.yangsunkue.suncar.entity.user.User;
 import com.yangsunkue.suncar.exception.NotFoundException;
 import com.yangsunkue.suncar.mapper.UserMapper;
 import com.yangsunkue.suncar.repository.user.UserRepository;
-import com.yangsunkue.suncar.security.CustomUserDetails;
-import com.yangsunkue.suncar.util.RandomUtils;
+
 import com.yangsunkue.suncar.util.factory.TestUserFactory;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -38,7 +37,6 @@ class UserServiceImplTest {
 
     /** 테스트 데이터 */
     private User testUser;
-    private CustomUserDetails testUserDetails;
     private UserProfileUpdateRequestDto testUserProfileUpdateRequestDto;
     private UserProfileResponseDto testUserProfileResponseDto;
 
@@ -47,7 +45,6 @@ class UserServiceImplTest {
     void setup() {
 
         testUser = TestUserFactory.createUser();
-        testUserDetails = mock(CustomUserDetails.class);
 
         testUserProfileUpdateRequestDto = UserProfileUpdateRequestDto.builder()
                 .userName(testUser.getUsername())
@@ -68,12 +65,12 @@ class UserServiceImplTest {
     void updateCurrentUserProfile() {
 
         // given
-        when(testUserDetails.getUserId()).thenReturn(testUser.getUserId());
-        when(userRepository.findByUserId(testUserDetails.getUserId())).thenReturn(Optional.of(testUser));
+        Long userId = 1L;
+        when(userRepository.findById(userId)).thenReturn(Optional.of(testUser));
         when(userMapper.toUserProfileResponseDto(testUser)).thenReturn(testUserProfileResponseDto);
 
         // when
-        UserProfileResponseDto result = userServiceImpl.updateCurrentUserProfile(testUserDetails, testUserProfileUpdateRequestDto);
+        UserProfileResponseDto result = userServiceImpl.updateCurrentUserProfile(userId, testUserProfileUpdateRequestDto);
 
         // then
         assertThat(result.getUserId()).isEqualTo(testUser.getUserId());
@@ -81,7 +78,6 @@ class UserServiceImplTest {
                 .usingRecursiveComparison()
                 .isEqualTo(testUserProfileResponseDto);
 
-        verify(userRepository).findByUserId(testUserDetails.getUserId());
         verify(userMapper).toUserProfileResponseDto(testUser);
     }
 
@@ -90,20 +86,18 @@ class UserServiceImplTest {
     void shouldThrowNotFoundWhenUserDoesNotExist() {
 
         // given
-        String nonExistentUserId = RandomUtils.createUuid(32);
-        when(testUserDetails.getUserId()).thenReturn(nonExistentUserId);
-        when(userRepository.findByUserId(testUserDetails.getUserId())).thenReturn(Optional.empty());
+        Long nonExistentUserId = 99999L;
 
         // when
         NotFoundException exception = assertThrows(NotFoundException.class,
                 () -> userServiceImpl.updateCurrentUserProfile(
-                        testUserDetails,
+                        nonExistentUserId,
                         testUserProfileUpdateRequestDto
                 ));
 
         // then
         assertThat(exception.getMessage()).isEqualTo(ErrorMessages.USER_NOT_FOUND);
-        verify(userRepository).findByUserId(nonExistentUserId);
+        verify(userRepository).findById(nonExistentUserId);
         verify(userMapper, never()).toUserProfileResponseDto(any(User.class));
     }
 }

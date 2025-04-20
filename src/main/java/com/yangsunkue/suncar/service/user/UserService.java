@@ -10,7 +10,7 @@ public interface UserService {
      * 현재 사용자 정보를 수정합니다.
      */
     UserProfileResponseDto updateCurrentUserProfile(
-            CustomUserDetails userDetails,
+            Long userId,
             UserProfileUpdateRequestDto dto
     );
 }

@@ -29,6 +29,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .orElseThrow(() -> new NotFoundException(ErrorMessages.USER_NOT_FOUND));
 
         return CustomUserDetails.builder()
+                .id(user.getId())
                 .userId(user.getUserId())
                 .username(user.getUsername())
                 .email(user.getEmail())
