@@ -42,7 +42,9 @@ public class SecurityConfig {
                                 "/api-docs/**",
                                 "/swagger-ui/**",
                                 "/auth/**",
-                                "/cars/**"
+                                "/cars/**",
+                                "/serverProfile",
+                                "/actuator/**"
                         ).permitAll()
                         // 그 외 모든 요청은 인증 필요
                         .anyRequest().authenticated()
