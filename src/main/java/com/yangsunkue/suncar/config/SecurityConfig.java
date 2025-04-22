@@ -44,7 +44,8 @@ public class SecurityConfig {
                                 "/auth/**",
                                 "/cars/**",
                                 "/serverProfile",
-                                "/actuator/**"
+                                "/actuator/**",
+                                "/github-webhook"
                         ).permitAll()
                         // 그 외 모든 요청은 인증 필요
                         .anyRequest().authenticated()
