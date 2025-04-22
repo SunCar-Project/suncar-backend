@@ -23,4 +23,5 @@ public class ServerController {
     public String getServerProfile() {
         return env.getProperty("server.port", "8081");
     }
+
 }
