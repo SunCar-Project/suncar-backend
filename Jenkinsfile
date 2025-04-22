@@ -59,7 +59,7 @@ pipeline {
 			steps {
 				sh """
 					# 빌드된 jar 파일을 로컬 디렉터리로 복사
-					cp $(find ${WORKSPACE}/build/libs -name "*.jar" -not -name "*-plain.jar") /opt/applications/suncar/${env.TARGET_ENV}/app.jar
+					cp \$(find ${WORKSPACE}/build/libs -name "*.jar" -not -name "*-plain.jar") /opt/applications/suncar/${env.TARGET_ENV}/app.jar
 				"""
 			}
 		}
