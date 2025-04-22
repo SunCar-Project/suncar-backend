@@ -21,6 +21,6 @@ public class ServerController {
      */
     @GetMapping("/serverProfile")
     public String getServerProfile() {
-        return env.getProperty("server.port", "8080");
+        return env.getProperty("server.port", "8081");
     }
 }
